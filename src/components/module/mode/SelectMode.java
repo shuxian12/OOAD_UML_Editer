@@ -13,10 +13,6 @@ public class SelectMode extends Mode{
     @Override
     public void onPressed(Point point) {
         System.out.println("SelectMode onPressed");
-        if(this.canvasController.getCanvasMode() == 1) {
-            System.out.println("Creating select");
-        } else if (this.canvasController.getCanvasMode() == 2) {
-            System.out.println("Selecting select");
-        }
+        this.canvasController.findObject(point);
     }
 }

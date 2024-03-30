@@ -2,9 +2,12 @@ package components.module;
 
 import components.module.controller.CanvasController;
 import components.module.controller.ToolBarController;
+import components.module.element.UMLObject;
+import utils.IDraw;
 import utils.IObserver;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Console {
     private ToolBarController toolBarController = new ToolBarController();
@@ -35,5 +38,9 @@ public class Console {
     public void CanvasPressed(Point point) {
         canvasController.onPressed(point);
         notifyObserver();
+    }
+
+    public ArrayList<IDraw> getObjects() {
+        return canvasController.getUMLObject();
     }
 }

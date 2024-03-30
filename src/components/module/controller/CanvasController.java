@@ -7,8 +7,10 @@ import components.module.mode.Mode;
 import components.module.mode.ObjectMode;
 import components.module.mode.SelectMode;
 import utils.Config.*;
+import utils.IDraw;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class CanvasController {
 //    private int CANVAS_MODE = 0;
@@ -40,17 +42,22 @@ public class CanvasController {
 
     public void onPressed(Point point) {
         System.out.println("Canvas Pressed");
+        umlObject.unselectALL();
         this.mode.onPressed(point);
     }
 
     public void findObject(Point point) {
         System.out.println("Finding object");
-
+        umlObject.findObject(point);
     }
 
     public void createObject(Point point) {
         System.out.println("Creating object");
         umlObject.addObject(this.getCanvasMode(), point);
+    }
+
+    public ArrayList<IDraw> getUMLObject() {
+        return umlObject.getDrawMethod();
     }
 }
 

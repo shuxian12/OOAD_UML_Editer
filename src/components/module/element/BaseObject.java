@@ -1,5 +1,7 @@
 package components.module.element;
 
+import utils.IDraw;
+
 import java.awt.*;
 
 abstract class BaseObject{
@@ -18,7 +20,7 @@ abstract class BaseObject{
     }
 
     public int getId() { return id; }
-    public int getType() { return type; }
+    public Point getSize() { return new Point(width, height); }
     public Point getLocation() { return location; }
     public boolean getSelected() { return selected; }
 
@@ -29,6 +31,14 @@ abstract class BaseObject{
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+    public IDraw getDrawMethod() {
+        return (Graphics2D g) -> draw(g);
+    }
+
+    public boolean contains(Point pt) {
+        return pt.x > location.x && pt.x < location.x + width &&
+                pt.y > location.y && pt.y < location.y + height;
     }
 
     abstract public void draw(Graphics g);
