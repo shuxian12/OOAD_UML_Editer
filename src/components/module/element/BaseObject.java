@@ -42,4 +42,8 @@ abstract class BaseObject{
     }
 
     abstract public void draw(Graphics g);
+
+    public int getType() {
+        return type;
+    }
 }

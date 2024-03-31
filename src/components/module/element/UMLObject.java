@@ -10,32 +10,64 @@ import java.util.Map;
 import static utils.Config.*;
 
 public class UMLObject {
-    private ArrayList<BaseObject> objects = new ArrayList<BaseObject>();
+    private final ArrayList<Base> objects = new ArrayList<>();
 
     public UMLObject() {
         System.out.println("UMLObject initialized");
     }
 
     public void addObject(int mode, Point point) {
-        if (mode == BUTTON_MODE.CCLASS) {
-            objects.add(new ClassObject(point));
-        } else if (mode == BUTTON_MODE.USECASE) {
-            objects.add(new UseCaseObject(point));
+        Base object = getTypeObject(mode, point);
+        if (object != null) {
+            objects.add(object);
+        }
+    }
+
+    public Line addLine(int mode) {
+        Line object = getTypeLine(mode);
+        if (object != null) {
+            objects.add(object);
+            return object;
+        }
+        return null;
+    }
+
+    public Base getTypeObject(int mode, Point point) {
+        switch (mode) {
+            case BUTTON_MODE.CCLASS:
+                return new ClassObject(point);
+            case BUTTON_MODE.USECASE:
+                return new UseCaseObject(point);
+            default:
+                return null;
+        }
+    }
+
+    public Line getTypeLine(int mode) {
+        switch (mode) {
+            case BUTTON_MODE.ASSOCIATION:
+                return new AssociationLine();
+            case BUTTON_MODE.GENERALIZATION:
+                return new GeneralizationLine();
+            case BUTTON_MODE.COMPOSITION:
+                return new CompositionLine();
+            default:
+                return null;
         }
     }
 
     public void unselectALL() {
-        for (BaseObject object : objects) {
+        for (Base object : objects) {
             object.unselect();
         }
     }
 
-    public ArrayList<BaseObject> getObjects() {
+    public ArrayList<Base> getObjects() {
         return objects;
     }
 
     public void findObject(Point point) {
-        for (BaseObject object : objects) {
+        for (Base object : objects) {
             if (object.contains(point)) {
 //                System.out.println("Object found");
                 object.select();
@@ -46,18 +78,47 @@ public class UMLObject {
         }
     }
 
+    public Shape findContainObject(Point point) {
+        for (Base object : objects) {
+            if (object.contains(point)) {
+                return (Shape) object;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<IDraw> getDrawMethod() {
         ArrayList<IDraw> draws = new ArrayList<>();
         this.objects.forEach((object) -> {
             draws.add(object.getDrawMethod());
+            System.out.println("Object added to draw: " + object.getId());
         });
         return draws;
     }
 
+    public Port findPort(Point point) {
+        Shape object = findContainObject(point);
+        if (object != null) {
+            System.out.println("Pressed on object");
+            return (Port) object.findPort(point);
+        }
+        System.out.println("Pressed on empty space");
+        return null;
+    }
 
-    abstract public class Shape extends BaseObject{
+    public void removeObject(Base object) {
+        objects.remove(object);
+    }
+
+    abstract public static class Base extends BaseObject{
+        Base(int id, int type){
+            super(id, type);
+        }
+    }
+
+    abstract public class Shape extends Base{
         protected String name = "";
-        protected ArrayList<BaseObject> ports = new ArrayList<>();
+        protected ArrayList<Base> ports = new ArrayList<>();
         Shape(int id, int type){
             super(id, type);
         }
@@ -70,10 +131,27 @@ public class UMLObject {
             ports.add(new Port(this, PORT_DIRECTION.SOUTH));
             ports.add(new Port(this, PORT_DIRECTION.WEST));
         }
+        public Base findPort(Point point){
+            int centerX = location.x + width / 2;
+            int centerY = location.y + height / 2;
+            Point normPoint = new Point(point.x - centerX, point.y - centerY);
+
+            if (normPoint.x + normPoint.y > 0) {
+                if (normPoint.x - normPoint.y > 0) {
+                    return ports.get(PORT_DIRECTION.EAST);
+                }
+                return ports.get(PORT_DIRECTION.SOUTH);
+            } else {
+                if (normPoint.x - normPoint.y > 0) {
+                    return ports.get(PORT_DIRECTION.NORTH);
+                }
+                return ports.get(PORT_DIRECTION.WEST);
+            }
+        }
         @Override
         public void draw(Graphics g) {
             g.setColor(Color.black);
-            for (BaseObject port : ports) {
+            for (Base port : ports) {
                 port.draw(g);
             }
 
@@ -106,7 +184,7 @@ public class UMLObject {
 
         @Override
         public boolean contains(Point pt) {
-//            System.out.println("ClassObject contains");
+            System.out.println("ClassObject contains");
             int x = pt.x - location.x;
             int y = pt.y - location.y;
             return x >= 0 && x <= width && y >= 0 && y <= height;
@@ -136,7 +214,7 @@ public class UMLObject {
 
         @Override
         public boolean contains(Point pt) {
-//            System.out.println("UseCaseObject contains");
+            System.out.println("UseCaseObject contains");
             int x = pt.x - location.x - width / 2;
             int y = pt.y - location.y - height / 2;
             return (x * x) / (width * width / 4) + (y * y) / (height * height / 4) <= 1;
@@ -146,12 +224,12 @@ public class UMLObject {
     public class Port extends Shape{
         // Port is a small square shape that will be place in the use_cases or class to connect the lines,
         // and it will be visible when selected, and invisible when unselected.
-        private BaseObject parent;
-        private int direction;
+        private final Base parent;
+        private final int direction;
         private final int PORT_SIZE = 10;
         private final Map<Integer, Point> locationMap = new HashMap<>();
 
-        public Port(BaseObject parent, int direction){
+        public Port(Base parent, int direction){
             super(-1, -1);
             super.setName("Port");
             this.height = PORT_SIZE;
@@ -177,8 +255,14 @@ public class UMLObject {
 //            System.out.println("Parent location: " + parent.getLocation() + " Port location: " + location);
         }
 
-        public Point getLocation(){
-            return location;
+        @Override
+        public Point getLocation() {
+            if (direction == PORT_DIRECTION.NORTH) {
+                return new Point(location.x + width / 2, location.y + height);
+            } else if (direction == PORT_DIRECTION.WEST) {
+                return new Point(location.x + width, location.y + height / 2);
+            }
+            return super.getLocation();
         }
 
         @Override
@@ -189,6 +273,91 @@ public class UMLObject {
                 g.setColor(Color.black);
                 g.fillRect(location.x, location.y, width, height);
             }
+        }
+    }
+
+    abstract public class Line extends Base{
+        protected Base startPort;
+        protected Base endPort;
+        protected Point startLocation;
+        protected Point endLocation;
+        protected final int ARROW_SIZE = 10;
+        protected int dx, dy;
+        Line(int id, int type){
+            super(id, type);
+        }
+        public void setConnection(Port start, Port end){
+            this.startPort = start;
+            this.endPort = end;
+            this.setLocation(this.startPort.getLocation(), this.endPort.getLocation());
+        }
+
+        public void setLocation(Point start, Point end){
+            this.startLocation = start;
+            this.endLocation = end;
+        }
+        @Override
+        public void draw(Graphics g) {
+            double angle = Math.atan2(endLocation.y - startLocation.y, endLocation.x - startLocation.x);
+            dx = (int) (ARROW_SIZE * Math.cos(angle));
+            dy = (int) (ARROW_SIZE * Math.sin(angle));
+
+            g.setColor(Color.black);
+            g.drawLine(startLocation.x, startLocation.y, endLocation.x, endLocation.y);
+        }
+    }
+
+    public class AssociationLine extends Line{
+        // arrow
+        public AssociationLine(){
+            super(BUTTON_MODE.ASSOCIATION, BUTTON_TYPE.LINE);
+        }
+
+        @Override
+        public void draw(Graphics g) {
+            super.draw(g);
+
+            g.drawLine(endLocation.x, endLocation.y, endLocation.x - dx - dy, endLocation.y - dy + dx);
+            g.drawLine(endLocation.x, endLocation.y, endLocation.x - dx + dy, endLocation.y - dy - dx);
+        }
+    }
+
+    public class GeneralizationLine extends Line{
+        // triangle <|-
+        public GeneralizationLine(){
+            super(BUTTON_MODE.GENERALIZATION, BUTTON_TYPE.LINE);
+        }
+
+        @Override
+        public void draw(Graphics g) {
+            super.draw(g);
+
+            int[] xPoints = {endLocation.x, endLocation.x - dx - dy, endLocation.x - dx + dy};
+            int[] yPoints = {endLocation.y, endLocation.y - dy + dx, endLocation.y - dy - dx};
+            g.setColor(Color.lightGray);
+            g.fillPolygon(xPoints, yPoints, 3);
+            g.setColor(Color.black);
+            g.drawPolygon(xPoints, yPoints, 3);
+        }
+    }
+
+    public class CompositionLine extends Line{
+        // diamond line <>-
+        public CompositionLine(){
+            super(BUTTON_MODE.COMPOSITION, BUTTON_TYPE.LINE);
+//            super.setConnection(start, end);
+        }
+
+        @Override
+        public void draw(Graphics g) {
+            super.draw(g);
+
+            int[] xPoints = {endLocation.x, endLocation.x - dx - dy, endLocation.x - 2*dx, endLocation.x - dx + dy};
+            int[] yPoints = {endLocation.y, endLocation.y - dy + dx, endLocation.y - 2*dy, endLocation.y - dy - dx};
+            g.setColor(Color.lightGray);
+            g.fillPolygon(xPoints, yPoints, 4);
+            g.setColor(Color.black);
+            g.drawPolygon(xPoints, yPoints, 4);
         }
     }
 

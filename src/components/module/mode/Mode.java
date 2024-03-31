@@ -22,4 +22,8 @@ public abstract class Mode {
     }
 
     public abstract void onPressed(Point point);
+
+    public abstract void onDragged(Point point);
+
+    public abstract void onReleased(Point point);
 }

@@ -2,6 +2,10 @@ package utils;
 
 // record the configuration of the application
 
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Config {
     public static class BUTTON_MODE {
         public static final int SELECT = 0;
@@ -24,5 +28,12 @@ public class Config {
         public static final int EAST = 1;
         public static final int SOUTH = 2;
         public static final int WEST = 3;
+
+        public static final Map<Integer, Point> PORT_DIRECTION = Map.of(
+            NORTH, new Point(0, -1),
+            EAST, new Point(1, 0),
+            SOUTH, new Point(0, 1),
+            WEST, new Point(-1, 0)
+        );
     }
 }

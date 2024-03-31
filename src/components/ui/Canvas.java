@@ -13,8 +13,8 @@ public class Canvas extends JPanel {
     public Canvas(Console console) {
         this.console = console;
         this.setBackground(Color.gray);
-        this.addMouseListener(new PressListener());
-        this.addMouseMotionListener(new DragListener());
+        this.addMouseListener(new MouseListener());
+        this.addMouseMotionListener(new MouseListener());
     }
 
     protected void paintComponent(Graphics g) {
@@ -27,16 +27,20 @@ public class Canvas extends JPanel {
 //        g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
-    private class PressListener extends MouseInputAdapter {
+    private class MouseListener extends MouseInputAdapter {
         public void mousePressed(MouseEvent e) {
             System.out.println("Canvas Pressed");
             console.CanvasPressed(e.getPoint());
         }
-    }
 
-    private class DragListener extends MouseInputAdapter {
         public void mouseDragged(MouseEvent e) {
             System.out.println("Canvas Dragged");
+            console.CanvasDragged(e.getPoint());
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            System.out.println("Canvas Released");
+            console.CanvasReleased(e.getPoint());
         }
     }
 }

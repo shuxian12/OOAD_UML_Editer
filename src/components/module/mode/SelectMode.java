@@ -15,4 +15,14 @@ public class SelectMode extends Mode{
         System.out.println("SelectMode onPressed");
         this.canvasController.findObject(point);
     }
+
+    @Override
+    public void onDragged(Point point) {
+        System.out.println("SelectMode onDragged");
+    }
+
+    @Override
+    public void onReleased(Point point) {
+        System.out.println("SelectMode onReleased");
+    }
 }

@@ -40,6 +40,16 @@ public class Console {
         notifyObserver();
     }
 
+    public void CanvasDragged(Point point) {
+        canvasController.onDragged(point);
+        notifyObserver();
+    }
+
+    public void CanvasReleased(Point point) {
+        canvasController.onReleased(point);
+        notifyObserver();
+    }
+
     public ArrayList<IDraw> getObjects() {
         return canvasController.getUMLObject();
     }

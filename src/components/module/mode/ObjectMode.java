@@ -15,4 +15,14 @@ public class ObjectMode extends Mode{
         System.out.println("ObjectMode onPressed");
         this.canvasController.createObject(point);
     }
+
+    @Override
+    public void onDragged(Point point) {
+        System.out.println("ObjectMode onDragged");
+    }
+
+    @Override
+    public void onReleased(Point point) {
+        System.out.println("ObjectMode onReleased");
+    }
 }

@@ -46,14 +46,39 @@ public class CanvasController {
         this.mode.onPressed(point);
     }
 
+    public void onDragged(Point point) {
+        System.out.println("Canvas Dragged");
+        this.mode.onDragged(point);
+    }
+
+    public void onReleased(Point point) {
+        System.out.println("Canvas Released");
+        this.mode.onReleased(point);
+    }
+
     public void findObject(Point point) {
         System.out.println("Finding object");
         umlObject.findObject(point);
     }
 
+    public UMLObject.Port findPort(Point point) {
+        System.out.println("Finding port");
+        return umlObject.findPort(point);
+    }
+
     public void createObject(Point point) {
         System.out.println("Creating object");
         umlObject.addObject(this.getCanvasMode(), point);
+    }
+
+    public UMLObject.Line createLine() {
+        System.out.println("Creating line");
+        return umlObject.addLine(this.getCanvasMode());
+    }
+
+    public void removeObject(UMLObject.Base object) {
+        System.out.println("Removing object");
+        umlObject.removeObject(object);
     }
 
     public ArrayList<IDraw> getUMLObject() {
