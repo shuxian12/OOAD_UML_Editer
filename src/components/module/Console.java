@@ -1,6 +1,7 @@
 package components.module;
 
 import components.module.controller.CanvasController;
+import components.module.controller.MenuController;
 import components.module.controller.ToolBarController;
 import components.module.element.UMLObject;
 import utils.IDraw;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 public class Console {
     private ToolBarController toolBarController = new ToolBarController();
     private CanvasController canvasController = new CanvasController();
+    private MenuController menuController = new MenuController();
     private IObserver observer;
     public Console() {
         System.out.println("Console initialized");
@@ -47,6 +49,12 @@ public class Console {
 
     public void CanvasReleased(Point point) {
         canvasController.onReleased(point);
+        notifyObserver();
+    }
+
+    public void MenuPressed(int actionId) {
+//        menuController.onMenuPressed(actionId);
+        canvasController.doAction(actionId, null);
         notifyObserver();
     }
 

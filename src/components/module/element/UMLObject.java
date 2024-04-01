@@ -16,11 +16,13 @@ public class UMLObject {
         System.out.println("UMLObject initialized");
     }
 
-    public void addObject(int mode, Point point) {
+    public Base addObject(int mode, Point point) {
         Base object = getTypeObject(mode, point);
         if (object != null) {
             objects.add(object);
+            return object;
         }
+        return null;
     }
 
     public Line addLine(int mode) {
@@ -38,6 +40,8 @@ public class UMLObject {
                 return new ClassObject(point);
             case BUTTON_MODE.USECASE:
                 return new UseCaseObject(point);
+            case BUTTON_MODE.SELECT:
+                return new SelectSquare(point);
             default:
                 return null;
         }
@@ -66,16 +70,14 @@ public class UMLObject {
         return objects;
     }
 
-    public void findObject(Point point) {
+    public Base findObject(Point point) {
         for (Base object : objects) {
             if (object.contains(point)) {
-//                System.out.println("Object found");
                 object.select();
-            } else {
-//                System.out.println("Object not found");
-                object.unselect();
+                return object;
             }
         }
+        return null;
     }
 
     public Shape findContainObject(Point point) {
@@ -109,6 +111,80 @@ public class UMLObject {
     public void removeObject(Base object) {
         objects.remove(object);
     }
+
+    public ArrayList<Base> setAreaObjects(Point topCorner, Point bottomCorner) {
+        ArrayList<Base> targets = new ArrayList<>();
+        for(Base object: getObjects()) {
+            if(object.containInArea(topCorner, bottomCorner)) {
+                targets.add(object);
+                object.select();
+            }
+        }
+        return targets;
+    }
+
+    public void doAction(int action, Base object) {
+        switch (action) {
+            case MENU_CONFIG.GROUP:
+                group();
+                break;
+            case MENU_CONFIG.UNGROUP:
+                ungroup(object);
+                break;
+            case MENU_CONFIG.RENAME:
+                rename();
+                break;
+            default:
+                System.out.println("Warning: Get Unsupported MenuItemId at Presenter.onPressed()");
+                break;
+        }
+    }
+
+    private void group() {
+        System.out.println("Grouping");
+        ArrayList<Base> selectedObjects = getSelectedObject();
+        Point topCorner = getTopCorner(selectedObjects);
+        Point bottomCorner = getBottomCorner(selectedObjects);
+        Group group = new Group(topCorner, bottomCorner, selectedObjects);
+        objects.add(group);
+    }
+
+    private void ungroup(Base target) {
+        objects.remove(target);
+    }
+
+    private void rename() {
+        System.out.println("Rename");
+    }
+
+    private ArrayList<Base> getSelectedObject() {
+        ArrayList<Base> selected = new ArrayList<>();
+        for (Base object : getObjects()) {
+            if (object.getSelected()) {
+                selected.add(object);
+            }
+        }
+        return selected;
+    }
+
+    private Point getTopCorner(ArrayList<Base> selectedObjects) {
+        Point topCorner = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        for (Base object : selectedObjects) {
+            topCorner.x = Math.min(topCorner.x, object.getLocation().x);
+            topCorner.y = Math.min(topCorner.y, object.getLocation().y);
+        }
+        return topCorner;
+    }
+
+    private Point getBottomCorner(ArrayList<Base> selectedObjects) {
+        Point bottomCorner = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        for (Base object : selectedObjects) {
+            bottomCorner.x = Math.max(bottomCorner.x, object.getLocation().x + object.getSize().x);
+            bottomCorner.y = Math.max(bottomCorner.y, object.getLocation().y + object.getSize().y);
+        }
+        return bottomCorner;
+    }
+
 
     abstract public static class Base extends BaseObject{
         Base(int id, int type){
@@ -230,15 +306,28 @@ public class UMLObject {
         private final Map<Integer, Point> locationMap = new HashMap<>();
 
         public Port(Base parent, int direction){
-            super(-1, -1);
+            super(OBJECT_TYPE.PORT, OBJECT_TYPE.PORT);
             super.setName("Port");
             this.height = PORT_SIZE;
             this.width = PORT_SIZE;
             this.parent = parent;
             this.direction = direction;
-            Point parentSize = parent.getSize();
 
+            this.updateMap();
 //            System.out.println("Parent size: " + parentSize + " Parent location: " + parent.getLocation());
+//            locationMap.put(PORT_DIRECTION.NORTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
+//                                                            parent.getLocation().y - height));
+//            locationMap.put(PORT_DIRECTION.EAST, new Point(parent.getLocation().x + parentSize.x,
+//                                                            parent.getLocation().y + parentSize.y/2 - height/2));
+//            locationMap.put(PORT_DIRECTION.SOUTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
+//                                                            parent.getLocation().y + parentSize.y));
+//            locationMap.put(PORT_DIRECTION.WEST, new Point(parent.getLocation().x - width,
+//                                                            parent.getLocation().y + parentSize.y/2 - height/2));
+            this.updateLocation();
+        }
+
+        private void updateMap() {
+            Point parentSize = parent.getSize();
             locationMap.put(PORT_DIRECTION.NORTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
                                                             parent.getLocation().y - height));
             locationMap.put(PORT_DIRECTION.EAST, new Point(parent.getLocation().x + parentSize.x,
@@ -247,10 +336,10 @@ public class UMLObject {
                                                             parent.getLocation().y + parentSize.y));
             locationMap.put(PORT_DIRECTION.WEST, new Point(parent.getLocation().x - width,
                                                             parent.getLocation().y + parentSize.y/2 - height/2));
-            this.updateLocation();
         }
 
         public void updateLocation(){
+            this.updateMap();
             this.location = locationMap.get(direction);
 //            System.out.println("Parent location: " + parent.getLocation() + " Port location: " + location);
         }
@@ -289,7 +378,6 @@ public class UMLObject {
         public void setConnection(Port start, Port end){
             this.startPort = start;
             this.endPort = end;
-            this.setLocation(this.startPort.getLocation(), this.endPort.getLocation());
         }
 
         public void setLocation(Point start, Point end){
@@ -298,6 +386,8 @@ public class UMLObject {
         }
         @Override
         public void draw(Graphics g) {
+            if (this.endPort != null)
+                this.setLocation(this.startPort.getLocation(), this.endPort.getLocation());
             double angle = Math.atan2(endLocation.y - startLocation.y, endLocation.x - startLocation.x);
             dx = (int) (ARROW_SIZE * Math.cos(angle));
             dy = (int) (ARROW_SIZE * Math.sin(angle));
@@ -358,6 +448,55 @@ public class UMLObject {
             g.fillPolygon(xPoints, yPoints, 4);
             g.setColor(Color.black);
             g.drawPolygon(xPoints, yPoints, 4);
+        }
+    }
+
+    public class SelectSquare extends Shape {
+        private Point startLocation, endLocation;
+        public SelectSquare(Point location){
+            super(OBJECT_TYPE.SELECT_SQUARE, OBJECT_TYPE.SELECT_SQUARE);
+            super.setName("Select Square");
+            super.setLocation(location);
+        }
+
+        @Override
+        public void draw(Graphics g) {
+            super.draw(g);
+            g.setColor(Color.black);
+            g.drawRect(location.x, location.y, width, height);
+        }
+    }
+
+    public class Group extends Shape {
+        private ArrayList<Base> groupObjects;
+        private Point startLocation;
+        private Point endLocation;
+        public Group(Point startLocation, Point endLocation, ArrayList<Base> groupObjects){
+            super(OBJECT_TYPE.GROUP, OBJECT_TYPE.GROUP);
+            super.setName("Group");
+            this.setLocation(startLocation, endLocation);
+            this.groupObjects = groupObjects;
+        }
+
+        public void setLocation(Point start, Point end){
+            this.startLocation = start;
+            this.endLocation = end;
+        }
+
+//        public void addObject(Base object){
+//            groupObjects.add(object);
+//        }
+//
+//        public void removeObject(Base object){
+//            groupObjects.remove(object);
+//        }
+
+        @Override
+        public void draw(Graphics g) {
+            super.draw(g);
+            g.setColor(Color.black);
+            g.drawRect(startLocation.x, startLocation.y,
+                    endLocation.x - startLocation.x, endLocation.y - startLocation.y);
         }
     }
 

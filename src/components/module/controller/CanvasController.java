@@ -1,6 +1,5 @@
 package components.module.controller;
 
-import components.module.element.ButtonObject;
 import components.module.element.UMLObject;
 import components.module.mode.LineMode;
 import components.module.mode.Mode;
@@ -56,9 +55,10 @@ public class CanvasController {
         this.mode.onReleased(point);
     }
 
-    public void findObject(Point point) {
+    public UMLObject.Base findObject(Point point) {
         System.out.println("Finding object");
-        umlObject.findObject(point);
+        umlObject.unselectALL();
+        return umlObject.findObject(point);
     }
 
     public UMLObject.Port findPort(Point point) {
@@ -66,9 +66,14 @@ public class CanvasController {
         return umlObject.findPort(point);
     }
 
-    public void createObject(Point point) {
+    public void setAreaObjects(Point topCorner, Point bottomCorner) {
+        System.out.println("Getting area objects");
+        umlObject.setAreaObjects(topCorner, bottomCorner);
+    }
+
+    public UMLObject.Base createObject(Point point) {
         System.out.println("Creating object");
-        umlObject.addObject(this.getCanvasMode(), point);
+        return umlObject.addObject(this.getCanvasMode(), point);
     }
 
     public UMLObject.Line createLine() {
@@ -83,6 +88,15 @@ public class CanvasController {
 
     public ArrayList<IDraw> getUMLObject() {
         return umlObject.getDrawMethod();
+    }
+
+    public void unselectALL() {
+        umlObject.unselectALL();
+    }
+
+    public void doAction(int action, UMLObject.Base object) {
+        System.out.println("Doing action");
+        umlObject.doAction(action, object);
     }
 }
 

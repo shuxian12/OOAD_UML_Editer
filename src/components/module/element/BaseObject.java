@@ -32,6 +32,11 @@ abstract class BaseObject{
         this.width = width;
         this.height = height;
     }
+    public void setSize(Point pt) {
+        this.width = pt.x;
+        this.height = pt.y;
+    }
+
     public IDraw getDrawMethod() {
         return (Graphics2D g) -> draw(g);
     }
@@ -39,6 +44,13 @@ abstract class BaseObject{
     public boolean contains(Point pt) {
         return pt.x > location.x && pt.x < location.x + width &&
                 pt.y > location.y && pt.y < location.y + height;
+    }
+
+    public boolean containInArea(Point start, Point end) {
+        int w = end.x - start.x;
+        int h = end.y - start.y;
+        return location.x > start.x && location.x + width < start.x + w &&
+                location.y > start.y && location.y + height < start.y + h;
     }
 
     abstract public void draw(Graphics g);

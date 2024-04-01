@@ -20,7 +20,7 @@ public class MainFrame extends JFrame implements IObserver {
         this.setTitle(title);
         this.add(new ToolBar(this.console), "West");
         this.add(new Canvas(this.console), "Center");
-        this.add(new MenuBar(), "North");
+        this.add(new MenuBar(this.console), "North");
 
         this.setVisible(true);
     }

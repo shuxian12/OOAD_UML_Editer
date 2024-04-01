@@ -25,7 +25,8 @@ public class LineMode extends Mode{
             valid_press = true;
             System.out.println("Line created");
             this.line = this.canvasController.createLine();
-            this.line.setConnection(this.startPort, this.startPort);
+            this.line.setConnection(this.startPort, null);
+            this.line.setLocation(this.startPort.getLocation(), point);
         }
     }
 
