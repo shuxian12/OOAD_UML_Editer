@@ -79,6 +79,7 @@ public class SelectMode extends Mode{
     }
 
     private class SelectObject extends MouseBehavior {
+        private Point prevPt;
         public SelectObject(UMLObject.Base target) {
             super(target);
         }
@@ -86,11 +87,15 @@ public class SelectMode extends Mode{
         public void onPressed(Point pt) {
             System.out.println("SelectObject onPressed");
             target = canvasController.findObject(pt);
+            prevPt = pt;
         }
         @Override
         public void onDragged(Point pt) {
             System.out.println("SelectObject onDragged");
-            target.setLocation(pt);
+            int dx = pt.x - prevPt.x;
+            int dy = pt.y - prevPt.y;
+            target.move(dx, dy);
+            prevPt = pt;
         }
         @Override
         public void onReleased(Point pt) {

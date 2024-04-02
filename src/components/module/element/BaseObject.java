@@ -11,6 +11,7 @@ abstract class BaseObject{
     protected int id;
     protected int type;
     protected boolean selected = false;
+    protected boolean isGroup = false;
 
     public BaseObject(){} // Default constructor
 
@@ -19,19 +20,25 @@ abstract class BaseObject{
         this.type = type;
     }
 
+    abstract public void draw(Graphics g);
+
     public int getId() { return id; }
     public Point getSize() { return new Point(width, height); }
     public Point getLocation() { return location; }
+    public int getType() { return type; }
     public boolean getSelected() { return selected; }
-
     public void select() { selected = true; }
     public void unselect() { selected = false; }
     public void setLocation(Point pt) { location = pt; }
-    public void setLocation(int x, int y) { location = new Point(x, y); }
+    public void move(int dx, int dy) {
+        location.x += dx;
+        location.y += dy;
+    }
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
     }
+
     public void setSize(Point pt) {
         this.width = pt.x;
         this.height = pt.y;
@@ -53,9 +60,4 @@ abstract class BaseObject{
                 location.y > start.y && location.y + height < start.y + h;
     }
 
-    abstract public void draw(Graphics g);
-
-    public int getType() {
-        return type;
-    }
 }

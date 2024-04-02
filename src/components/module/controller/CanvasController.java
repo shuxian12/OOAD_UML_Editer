@@ -15,7 +15,7 @@ public class CanvasController {
 //    private int CANVAS_MODE = 0;
 
     private UMLObject umlObject = new UMLObject();
-    private Mode mode;
+    private Mode mode = new SelectMode(this);
 
     public CanvasController() {
         System.out.println("CanvasController initialized");

@@ -72,7 +72,7 @@ public class UMLObject {
 
     public Base findObject(Point point) {
         for (Base object : objects) {
-            if (object.contains(point)) {
+            if (object.contains(point) && !object.isGroup){
                 object.select();
                 return object;
             }
@@ -100,7 +100,7 @@ public class UMLObject {
 
     public Port findPort(Point point) {
         Shape object = findContainObject(point);
-        if (object != null) {
+        if (object != null && object.getType() != OBJECT_TYPE.GROUP){
             System.out.println("Pressed on object");
             return (Port) object.findPort(point);
         }
@@ -129,7 +129,7 @@ public class UMLObject {
                 group();
                 break;
             case MENU_CONFIG.UNGROUP:
-                ungroup(object);
+                ungroup();
                 break;
             case MENU_CONFIG.RENAME:
                 rename();
@@ -149,8 +149,19 @@ public class UMLObject {
         objects.add(group);
     }
 
-    private void ungroup(Base target) {
-        objects.remove(target);
+    private void ungroup() {
+        System.out.println("Ungrouping");
+        ArrayList<Base> selectedObjects = getSelectedObject();
+        if (selectedObjects.size() != 1 ||
+                selectedObjects.get(0).getType() != OBJECT_TYPE.GROUP) {
+            return;
+        }
+
+        for (Base object : ((Group) selectedObjects.get(0)).groupObjects) {
+            object.isGroup = false;
+        }
+        objects.remove(selectedObjects.get(0));
+        this.unselectALL();
     }
 
     private void rename() {
@@ -233,6 +244,12 @@ public class UMLObject {
 
             g.setColor(Color.lightGray);
 //            g.fillRect(location.x, location.y, width, height);
+        }
+
+        @Override
+        public void move(int dx, int dy) {
+            super.move(dx, dy);
+            System.out.println("Shape move from " + location + " to " + new Point(location.x + dx, location.y + dy));
         }
     }
 
@@ -476,6 +493,7 @@ public class UMLObject {
             super.setName("Group");
             this.setLocation(startLocation, endLocation);
             this.groupObjects = groupObjects;
+            this.setGroupType();
         }
 
         public void setLocation(Point start, Point end){
@@ -483,13 +501,16 @@ public class UMLObject {
             this.endLocation = end;
         }
 
-//        public void addObject(Base object){
-//            groupObjects.add(object);
-//        }
-//
-//        public void removeObject(Base object){
-//            groupObjects.remove(object);
-//        }
+        private void setGroupType(){
+            for (Base object : groupObjects) {
+                object.isGroup = true;
+            }
+        }
+
+        @Override
+        public Point getLocation() {
+            return startLocation;
+        }
 
         @Override
         public void draw(Graphics g) {
@@ -497,6 +518,26 @@ public class UMLObject {
             g.setColor(Color.black);
             g.drawRect(startLocation.x, startLocation.y,
                     endLocation.x - startLocation.x, endLocation.y - startLocation.y);
+        }
+
+        @Override
+        public void move(int dx, int dy) {
+            System.out.println("Group move from " + startLocation + "," + endLocation + " to " +
+                    new Point(startLocation.x + dx, startLocation.y + dy) + ", " + new Point(endLocation.x + dx, endLocation.y + dy));
+            this.startLocation.x += dx;
+            this.startLocation.y += dy;
+            this.endLocation.x += dx;
+            this.endLocation.y += dy;
+            for (Base object : groupObjects) {
+                object.move(dx, dy);
+            }
+        }
+
+        @Override
+        public boolean contains(Point pt) {
+            return pt.x > startLocation.x && pt.x < endLocation.x &&
+                    pt.y > startLocation.y && pt.y < endLocation.y;
+
         }
     }
 
