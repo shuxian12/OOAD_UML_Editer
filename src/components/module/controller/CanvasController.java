@@ -12,10 +12,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class CanvasController {
-//    private int CANVAS_MODE = 0;
-
     private UMLObject umlObject = new UMLObject();
     private Mode mode = new SelectMode(this);
+    private boolean isRename = false;
 
     public CanvasController() {
         System.out.println("CanvasController initialized");
@@ -35,6 +34,18 @@ public class CanvasController {
         this.mode.setMode(mode);
     }
 
+    public boolean doRenameValid() {
+        if (isRename) {
+            isRename = false;
+            return umlObject.checkRenameValid();
+        }
+        return false;
+    }
+
+    public void changeObjectName(String name) {
+        umlObject.rename(name);
+    }
+
     public int getCanvasMode() {
         return this.mode.getMode();
     }
@@ -46,7 +57,7 @@ public class CanvasController {
     }
 
     public void onDragged(Point point) {
-        System.out.println("Canvas Dragged");
+//        System.out.println("Canvas Dragged");
         this.mode.onDragged(point);
     }
 
@@ -96,7 +107,21 @@ public class CanvasController {
 
     public void doAction(int action, UMLObject.Base object) {
         System.out.println("Doing action");
-        umlObject.doAction(action, object);
+//        umlObject.doAction(action, object);
+        switch (action) {
+            case MENU_CONFIG.GROUP:
+                umlObject.group();
+                break;
+            case MENU_CONFIG.UNGROUP:
+                umlObject.ungroup();
+                break;
+            case MENU_CONFIG.RENAME:
+                isRename = true;
+                break;
+            default:
+                System.out.println("Warning: Get Unsupported MenuItemId at Presenter.onPressed()");
+                break;
+        }
     }
 }
 

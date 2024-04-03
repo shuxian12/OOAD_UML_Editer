@@ -13,8 +13,4 @@ public class MenuController {
 //        MENU_BAR.action(menuId);
 
     }
-
-//    public boolean isSelected(int menuId) {
-//        return MENU_BAR.isSelected(menuId);
-//    }
 }

@@ -33,13 +33,6 @@ public class Config {
         public static final int EAST = 1;
         public static final int SOUTH = 2;
         public static final int WEST = 3;
-
-        public static final Map<Integer, Point> PORT_DIRECTION = Map.of(
-            NORTH, new Point(0, -1),
-            EAST, new Point(1, 0),
-            SOUTH, new Point(0, 1),
-            WEST, new Point(-1, 0)
-        );
     }
 
     public static class MENU_CONFIG {
@@ -54,11 +47,5 @@ public class Config {
             "Ungroup", UNGROUP,
             "Rename", RENAME
         );
-//        public final static class MENU_ACTION {
-//            public final static int GROUP = 0;
-//            public final static int UNGROUP = 1;
-//            public final static int RENAME = 2;
-//        }
     }
-
 }

@@ -4,6 +4,7 @@ import components.module.Console;
 import components.module.element.UMLObject;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -11,8 +12,10 @@ import java.awt.event.MouseEvent;
 public class Canvas extends JPanel {
     private Console console;
     public Canvas(Console console) {
+        Border blackLine = BorderFactory.createLineBorder(Color.black);
         this.console = console;
-        this.setBackground(Color.gray);
+        this.setBackground(Color.white);
+        this.setBorder(blackLine);
         this.addMouseListener(new MouseListener());
         this.addMouseMotionListener(new MouseListener());
     }
@@ -34,7 +37,7 @@ public class Canvas extends JPanel {
         }
 
         public void mouseDragged(MouseEvent e) {
-            System.out.println("Canvas Dragged");
+//            System.out.println("Canvas Dragged");
             console.CanvasDragged(e.getPoint());
         }
 

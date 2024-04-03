@@ -3,14 +3,32 @@ package components.module.element;
 import utils.IDraw;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import static utils.Config.*;
 
 public class UMLObject {
-    private final ArrayList<Base> objects = new ArrayList<>();
+    private final ArrayList<Base> objects = new ArrayList<>() {
+        @Override
+        public boolean add(Base base) {
+            base.setDepth(getNextDepth());
+            super.add(base);
+            sort(new UMLComparator());
+            return true;
+        }
+    };
+
+    private class UMLComparator implements Comparator<Base> {
+        // descending order
+        @Override
+        public int compare(Base o1, Base o2) {
+            if (o1.depth == o2.depth) {
+                return 0;
+            }
+            return o1.depth < o2.depth ? 1 : -1;
+        }
+    }
 
     public UMLObject() {
         System.out.println("UMLObject initialized");
@@ -32,6 +50,14 @@ public class UMLObject {
             return object;
         }
         return null;
+    }
+
+    private int getNextDepth() {
+        int maxDepth = 0;
+        for (Base object : objects) {
+            maxDepth = Math.max(maxDepth, object.depth);
+        }
+        return maxDepth + 1;
     }
 
     public Base getTypeObject(int mode, Point point) {
@@ -82,7 +108,7 @@ public class UMLObject {
 
     public Shape findContainObject(Point point) {
         for (Base object : objects) {
-            if (object.contains(point)) {
+            if (object.contains(point) && !object.isGroup) {
                 return (Shape) object;
             }
         }
@@ -91,10 +117,12 @@ public class UMLObject {
 
     public ArrayList<IDraw> getDrawMethod() {
         ArrayList<IDraw> draws = new ArrayList<>();
-        this.objects.forEach((object) -> {
+        ListIterator<Base> iterator = objects.listIterator(objects.size());
+        while (iterator.hasPrevious()) {
+            Base object = iterator.previous();
             draws.add(object.getDrawMethod());
-            System.out.println("Object added to draw: " + object.getId());
-        });
+//            System.out.println("Object added to draw: " + object.getId());
+        }
         return draws;
     }
 
@@ -115,7 +143,7 @@ public class UMLObject {
     public ArrayList<Base> setAreaObjects(Point topCorner, Point bottomCorner) {
         ArrayList<Base> targets = new ArrayList<>();
         for(Base object: getObjects()) {
-            if(object.containInArea(topCorner, bottomCorner)) {
+            if(object.containInArea(topCorner, bottomCorner) && !object.isGroup) {
                 targets.add(object);
                 object.select();
             }
@@ -123,24 +151,24 @@ public class UMLObject {
         return targets;
     }
 
-    public void doAction(int action, Base object) {
-        switch (action) {
-            case MENU_CONFIG.GROUP:
-                group();
-                break;
-            case MENU_CONFIG.UNGROUP:
-                ungroup();
-                break;
-            case MENU_CONFIG.RENAME:
-                rename();
-                break;
-            default:
-                System.out.println("Warning: Get Unsupported MenuItemId at Presenter.onPressed()");
-                break;
-        }
-    }
+//    public void doAction(int action, Base object) {
+//        switch (action) {
+//            case MENU_CONFIG.GROUP:
+//                group();
+//                break;
+//            case MENU_CONFIG.UNGROUP:
+//                ungroup();
+//                break;
+//            case MENU_CONFIG.RENAME:
+//                rename();
+//                break;
+//            default:
+//                System.out.println("Warning: Get Unsupported MenuItemId at Presenter.onPressed()");
+//                break;
+//        }
+//    }
 
-    private void group() {
+    public void group() {
         System.out.println("Grouping");
         ArrayList<Base> selectedObjects = getSelectedObject();
         Point topCorner = getTopCorner(selectedObjects);
@@ -149,7 +177,7 @@ public class UMLObject {
         objects.add(group);
     }
 
-    private void ungroup() {
+    public void ungroup() {
         System.out.println("Ungrouping");
         ArrayList<Base> selectedObjects = getSelectedObject();
         if (selectedObjects.size() != 1 ||
@@ -164,8 +192,16 @@ public class UMLObject {
         this.unselectALL();
     }
 
-    private void rename() {
+    public void rename(String newName) {
         System.out.println("Rename");
+        ArrayList<Base> selectedObjects = getSelectedObject();
+        ((Shape) selectedObjects.get(0)).setName(newName);
+    }
+
+    public boolean checkRenameValid() {
+        ArrayList<Base> selectedObjects = getSelectedObject();
+        return selectedObjects.size() == 1
+                && selectedObjects.get(0).getType() == BUTTON_TYPE.SHAPE;
     }
 
     private ArrayList<Base> getSelectedObject() {
@@ -190,8 +226,14 @@ public class UMLObject {
     private Point getBottomCorner(ArrayList<Base> selectedObjects) {
         Point bottomCorner = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
         for (Base object : selectedObjects) {
-            bottomCorner.x = Math.max(bottomCorner.x, object.getLocation().x + object.getSize().x);
-            bottomCorner.y = Math.max(bottomCorner.y, object.getLocation().y + object.getSize().y);
+            if (object.getType() != OBJECT_TYPE.GROUP) {
+                bottomCorner.x = Math.max(bottomCorner.x, object.getLocation().x + object.getSize().x);
+                bottomCorner.y = Math.max(bottomCorner.y, object.getLocation().y + object.getSize().y);
+            }
+            else {
+                bottomCorner.x = Math.max(bottomCorner.x, ((Group) object).endLocation.x);
+                bottomCorner.y = Math.max(bottomCorner.y, ((Group) object).endLocation.y);
+            }
         }
         return bottomCorner;
     }
@@ -238,8 +280,10 @@ public class UMLObject {
         @Override
         public void draw(Graphics g) {
             g.setColor(Color.black);
-            for (Base port : ports) {
-                port.draw(g);
+            if (!this.isGroup) {
+                for (Base port : ports) {
+                    port.draw(g);
+                }
             }
 
             g.setColor(Color.lightGray);
@@ -249,7 +293,7 @@ public class UMLObject {
         @Override
         public void move(int dx, int dy) {
             super.move(dx, dy);
-            System.out.println("Shape move from " + location + " to " + new Point(location.x + dx, location.y + dy));
+//            System.out.println("Shape move from " + location + " to " + new Point(location.x + dx, location.y + dy));
         }
     }
 
@@ -379,6 +423,10 @@ public class UMLObject {
                 g.setColor(Color.black);
                 g.fillRect(location.x, location.y, width, height);
             }
+        }
+
+        public Base getParent(){
+            return parent;
         }
     }
 
@@ -515,15 +563,20 @@ public class UMLObject {
         @Override
         public void draw(Graphics g) {
             super.draw(g);
-            g.setColor(Color.black);
+            if (getSelected() && !isGroup) {
+                g.setColor(Color.black);
+            }
+            else {
+                g.setColor(Color.lightGray);
+            }
             g.drawRect(startLocation.x, startLocation.y,
                     endLocation.x - startLocation.x, endLocation.y - startLocation.y);
         }
 
         @Override
         public void move(int dx, int dy) {
-            System.out.println("Group move from " + startLocation + "," + endLocation + " to " +
-                    new Point(startLocation.x + dx, startLocation.y + dy) + ", " + new Point(endLocation.x + dx, endLocation.y + dy));
+//            System.out.println("Group move from " + startLocation + "," + endLocation + " to " +
+//                    new Point(startLocation.x + dx, startLocation.y + dy) + ", " + new Point(endLocation.x + dx, endLocation.y + dy));
             this.startLocation.x += dx;
             this.startLocation.y += dy;
             this.endLocation.x += dx;
@@ -538,6 +591,12 @@ public class UMLObject {
             return pt.x > startLocation.x && pt.x < endLocation.x &&
                     pt.y > startLocation.y && pt.y < endLocation.y;
 
+        }
+
+        @Override
+        public boolean containInArea(Point start, Point end) {
+            return startLocation.x > start.x && endLocation.x < end.x &&
+                    startLocation.y > start.y && endLocation.y < end.y;
         }
     }
 

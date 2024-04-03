@@ -38,22 +38,17 @@ public class MenuBar extends JMenuBar{
     }
 
     private class MenuItem extends JMenuItem{
-        private int menuItemId;
+        private final int menuItemId;
         public MenuItem(String name, int menuItemId){
             super(name);
             this.menuItemId = menuItemId;
             this.addActionListener(e -> {
                 onPressed(menuItemId);
             });
-
         }
 
         private void onPressed(int actionId){
             console.MenuPressed(actionId);
-
-//            if ("rename".equals(name)){
-//                console.Rename();
-//            }
         }
     }
 }

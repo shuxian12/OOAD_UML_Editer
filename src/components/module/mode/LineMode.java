@@ -35,7 +35,7 @@ public class LineMode extends Mode{
         if (!valid_press) {
             return;
         }
-        System.out.println("LineMode onDragged");
+//        System.out.println("LineMode onDragged");
         this.line.setLocation(this.startPort.getLocation(), point);
     }
 
@@ -46,7 +46,8 @@ public class LineMode extends Mode{
         }
         System.out.println("LineMode onReleased");
         this.endPort = this.canvasController.findPort(point);
-        if (this.endPort != null) {
+        if (this.endPort != null &&
+                this.startPort.getParent() != this.endPort.getParent()){
             this.line.setConnection(this.startPort, this.endPort);
         } else {
             this.canvasController.removeObject(this.line);

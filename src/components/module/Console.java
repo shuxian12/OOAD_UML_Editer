@@ -7,6 +7,7 @@ import components.module.element.UMLObject;
 import utils.IDraw;
 import utils.IObserver;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -55,10 +56,22 @@ public class Console {
     public void MenuPressed(int actionId) {
 //        menuController.onMenuPressed(actionId);
         canvasController.doAction(actionId, null);
+
+        if (canvasController.doRenameValid()) {
+            changeObjectName(JOptionPane.showInputDialog(
+                    new JFrame(),
+                    "Enter the new object name"));
+        }
         notifyObserver();
     }
 
     public ArrayList<IDraw> getObjects() {
         return canvasController.getUMLObject();
+    }
+
+    private void changeObjectName(String name) {
+        if (name == null)
+            return;
+        canvasController.changeObjectName(name);
     }
 }

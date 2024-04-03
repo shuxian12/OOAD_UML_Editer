@@ -14,24 +14,6 @@ public class MenuObject {
         menus.add(new Edit());
     }
 
-//    public void action(int mode) {
-//        this.mode = mode;
-//
-//        switch (mode) {
-//            case MENU_CONFIG.GROUP:
-//
-//        }
-//    }
-//
-//    private void group() {
-//        System.out.println("Grouping");
-//
-//    }
-
-    public int getMode() {
-        return this.mode;
-    }
-
     private class Menu {
         private ArrayList<MenuItem> menuItems = new ArrayList<>();
         private String name;

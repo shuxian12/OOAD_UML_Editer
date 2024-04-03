@@ -10,6 +10,7 @@ abstract class BaseObject{
     protected int height;
     protected int id;
     protected int type;
+    protected int depth;
     protected boolean selected = false;
     protected boolean isGroup = false;
 
@@ -26,14 +27,19 @@ abstract class BaseObject{
     public Point getSize() { return new Point(width, height); }
     public Point getLocation() { return location; }
     public int getType() { return type; }
+    public IDraw getDrawMethod() {
+        return (Graphics2D g) -> draw(g);
+    }
     public boolean getSelected() { return selected; }
     public void select() { selected = true; }
     public void unselect() { selected = false; }
-    public void setLocation(Point pt) { location = pt; }
+
     public void move(int dx, int dy) {
         location.x += dx;
         location.y += dy;
     }
+    public void setLocation(Point pt) { location = pt; }
+
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
@@ -44,8 +50,8 @@ abstract class BaseObject{
         this.height = pt.y;
     }
 
-    public IDraw getDrawMethod() {
-        return (Graphics2D g) -> draw(g);
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     public boolean contains(Point pt) {

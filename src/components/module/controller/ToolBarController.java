@@ -15,12 +15,4 @@ public class ToolBarController {
     public boolean isSelected(int buttonId) {
         return buttonObject.isSelected(buttonId);
     }
-
-//    private class ButtonObject extends BaseObject {
-//        public ButtonObject() {
-//            System.out.println("ButtonObject initialized");
-//        }
-//    }
-
-
 }

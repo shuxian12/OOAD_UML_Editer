@@ -61,7 +61,7 @@ public class SelectMode extends Mode{
         }
         @Override
         public void onDragged(Point pt) {
-            System.out.println("NullSelectBehavior onDragged");
+//            System.out.println("NullSelectBehavior onDragged");
             Point prevPt = target.getLocation();
             Point new_point = new Point(Math.min(pt.x, prevPt.x), Math.min(pt.y, prevPt.y));
             Point new_size = new Point(Math.abs(pt.x - prevPt.x), Math.abs(pt.y - prevPt.y));
@@ -91,7 +91,7 @@ public class SelectMode extends Mode{
         }
         @Override
         public void onDragged(Point pt) {
-            System.out.println("SelectObject onDragged");
+//            System.out.println("SelectObject onDragged");
             int dx = pt.x - prevPt.x;
             int dy = pt.y - prevPt.y;
             target.move(dx, dy);
