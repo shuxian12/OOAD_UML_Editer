@@ -26,7 +26,7 @@ public class UMLObject {
             if (o1.depth == o2.depth) {
                 return 0;
             }
-            return o1.depth < o2.depth ? 1 : -1;
+            return o1.depth > o2.depth ? 1 : -1;
         }
     }
 
@@ -53,11 +53,11 @@ public class UMLObject {
     }
 
     private int getNextDepth() {
-        int maxDepth = 0;
+        int minDepth = 100;
         for (Base object : objects) {
-            maxDepth = Math.max(maxDepth, object.depth);
+            minDepth = Math.min(minDepth, object.depth);
         }
-        return maxDepth + 1;
+        return minDepth - 1;
     }
 
     public Base getTypeObject(int mode, Point point) {
@@ -171,6 +171,9 @@ public class UMLObject {
     public void group() {
         System.out.println("Grouping");
         ArrayList<Base> selectedObjects = getSelectedObject();
+        if (selectedObjects.size() < 2) {
+            return;
+        }
         Point topCorner = getTopCorner(selectedObjects);
         Point bottomCorner = getBottomCorner(selectedObjects);
         Group group = new Group(topCorner, bottomCorner, selectedObjects);
@@ -571,6 +574,10 @@ public class UMLObject {
             }
             g.drawRect(startLocation.x, startLocation.y,
                     endLocation.x - startLocation.x, endLocation.y - startLocation.y);
+
+            for (Base object : groupObjects) {
+                object.draw(g);
+            }
         }
 
         @Override
