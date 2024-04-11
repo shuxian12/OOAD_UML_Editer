@@ -9,7 +9,7 @@ public class LineMode extends Mode{
     private UMLObject.Line line;
     private UMLObject.Port startPort;
     private UMLObject.Port endPort;
-    private boolean valid_press = false;
+    private boolean validPress = false;
     public LineMode(CanvasController canvasController) {
         super(canvasController);
         System.out.println("LineMode initialized");
@@ -20,9 +20,9 @@ public class LineMode extends Mode{
         System.out.println("LineMode onPressed");
         this.startPort = this.canvasController.findPort(point);
         System.out.println("LineMode onPressed startPort: " + this.startPort);
-        valid_press = false;
+        validPress = false;
         if (this.startPort != null) {
-            valid_press = true;
+            validPress = true;
             System.out.println("Line created");
             this.line = this.canvasController.createLine();
             this.line.setConnection(this.startPort, null);
@@ -32,7 +32,7 @@ public class LineMode extends Mode{
 
     @Override
     public void onDragged(Point point) {
-        if (!valid_press) {
+        if (!validPress) {
             return;
         }
 //        System.out.println("LineMode onDragged");
@@ -41,7 +41,7 @@ public class LineMode extends Mode{
 
     @Override
     public void onReleased(Point point) {
-        if (!valid_press) {
+        if (!validPress) {
             return;
         }
         System.out.println("LineMode onReleased");

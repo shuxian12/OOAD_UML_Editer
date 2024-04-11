@@ -283,8 +283,9 @@ public class UMLObject {
         @Override
         public void draw(Graphics g) {
             g.setColor(Color.black);
-            if (!this.isGroup) {
-                for (Base port : ports) {
+            for (Base port : ports) {
+                port.updateLocation();
+                if (!this.isGroup){
                     port.draw(g);
                 }
             }
@@ -402,6 +403,7 @@ public class UMLObject {
                                                             parent.getLocation().y + parentSize.y/2 - height/2));
         }
 
+        @Override
         public void updateLocation(){
             this.updateMap();
             this.location = locationMap.get(direction);
@@ -520,7 +522,6 @@ public class UMLObject {
     }
 
     public class SelectSquare extends Shape {
-        private Point startLocation, endLocation;
         public SelectSquare(Point location){
             super(OBJECT_TYPE.SELECT_SQUARE, OBJECT_TYPE.SELECT_SQUARE);
             super.setName("Select Square");

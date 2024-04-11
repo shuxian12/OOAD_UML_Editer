@@ -6,8 +6,6 @@ import components.module.element.UMLObject;
 import java.awt.*;
 
 public class SelectMode extends Mode{
-    private Point start, end;
-    private boolean valid_press = false;
     private MouseBehavior mouseBehavior;
     public SelectMode(CanvasController canvasController) {
         super(canvasController);
@@ -18,10 +16,8 @@ public class SelectMode extends Mode{
     public void onPressed(Point point) {
         System.out.println("SelectMode onPressed");
         canvasController.unselectALL();
-        valid_press = false;
         UMLObject.Base object = this.canvasController.findObject(point);
         if (object != null) {
-            valid_press = true;
             this.mouseBehavior = new SelectObject(object);
         } else {
             this.mouseBehavior = new NullSelectBehavior(null);
@@ -50,6 +46,7 @@ public class SelectMode extends Mode{
     }
 
     private class NullSelectBehavior extends MouseBehavior {
+        private Point initialPoint;
         // 選取模式
         public NullSelectBehavior(UMLObject.Base target) {
             super(target);
@@ -57,16 +54,16 @@ public class SelectMode extends Mode{
         @Override
         public void onPressed(Point pt) {
             System.out.println("NullSelectBehavior onPressed");
-            target = canvasController.createObject(pt);
+            this.target = canvasController.createObject(pt);
+            this.initialPoint = pt;
         }
         @Override
         public void onDragged(Point pt) {
 //            System.out.println("NullSelectBehavior onDragged");
-            Point prevPt = target.getLocation();
-            Point new_point = new Point(Math.min(pt.x, prevPt.x), Math.min(pt.y, prevPt.y));
-            Point new_size = new Point(Math.abs(pt.x - prevPt.x), Math.abs(pt.y - prevPt.y));
-            this.target.setLocation(new_point);
-            this.target.setSize(new_size);
+            Point newPoint = new Point(Math.min(pt.x, initialPoint.x), Math.min(pt.y, initialPoint.y));
+            Point newSize = new Point(Math.abs(pt.x - initialPoint.x), Math.abs(pt.y - initialPoint.y));
+            this.target.setLocation(newPoint);
+            this.target.setSize(newSize);
         }
         @Override
         public void onReleased(Point pt) {

@@ -40,6 +40,8 @@ abstract class BaseObject{
     }
     public void setLocation(Point pt) { location = pt; }
 
+    public void updateLocation(){}
+
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
