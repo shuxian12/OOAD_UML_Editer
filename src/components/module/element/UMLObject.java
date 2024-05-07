@@ -108,7 +108,8 @@ public class UMLObject {
 
     public Shape findContainObject(Point point) {
         for (Base object : objects) {
-            if (object.contains(point) && !object.isGroup) {
+//            if (object.contains(point) && !object.isGroup) {
+            if (object.getType() != OBJECT_TYPE.GROUP && object.contains(point)) {
                 return (Shape) object;
             }
         }
@@ -128,7 +129,8 @@ public class UMLObject {
 
     public Port findPort(Point point) {
         Shape object = findContainObject(point);
-        if (object != null && object.getType() != OBJECT_TYPE.GROUP){
+//        if (object != null && object.getType() != OBJECT_TYPE.GROUP){
+        if (object != null){
             System.out.println("Pressed on object");
             return (Port) object.findPort(point);
         }
@@ -596,8 +598,14 @@ public class UMLObject {
 
         @Override
         public boolean contains(Point pt) {
-            return pt.x > startLocation.x && pt.x < endLocation.x &&
-                    pt.y > startLocation.y && pt.y < endLocation.y;
+            for(Base object: groupObjects) {
+                if (object.contains(pt)) {
+                    return true;
+                }
+            }
+            return false;
+//            return pt.x > startLocation.x && pt.x < endLocation.x &&
+//                    pt.y > startLocation.y && pt.y < endLocation.y;
 
         }
 
