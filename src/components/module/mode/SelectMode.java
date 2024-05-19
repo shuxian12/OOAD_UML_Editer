@@ -69,7 +69,8 @@ public class SelectMode extends Mode{
         public void onReleased(Point pt) {
             System.out.println("NullSelectBehavior onReleased");
 
-            canvasController.setAreaObjects(this.target.getLocation(), new Point(pt.x, pt.y));
+            canvasController.setAreaObjects(new Point(Math.min(pt.x, initialPoint.x), Math.min(pt.y, initialPoint.y)),
+                    new Point(Math.max(pt.x, initialPoint.x), Math.max(pt.y, initialPoint.y)));
 
             canvasController.removeObject(this.target);
         }
