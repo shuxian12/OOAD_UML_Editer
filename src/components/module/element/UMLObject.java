@@ -60,7 +60,7 @@ public class UMLObject {
         return minDepth - 1;
     }
 
-    public Base getTypeObject(int mode, Point point) {
+    private Base getTypeObject(int mode, Point point) {
         switch (mode) {
             case BUTTON_MODE.CCLASS:
                 return new ClassObject(point);
@@ -109,7 +109,8 @@ public class UMLObject {
     public Shape findContainObject(Point point) {
         for (Base object : objects) {
 //            if (object.contains(point) && !object.isGroup) {
-            if (object.getType() != OBJECT_TYPE.GROUP && object.contains(point)) {
+//            if (object.getType() != OBJECT_TYPE.GROUP && object.contains(point)) {
+            if (!(object instanceof Group) && object.contains(point)) {
                 return (Shape) object;
             }
         }
@@ -186,7 +187,8 @@ public class UMLObject {
         System.out.println("Ungrouping");
         ArrayList<Base> selectedObjects = getSelectedObject();
         if (selectedObjects.size() != 1 ||
-                selectedObjects.get(0).getType() != OBJECT_TYPE.GROUP) {
+//                selectedObjects.get(0).getType() != OBJECT_TYPE.GROUP) {
+                !(selectedObjects.get(0) instanceof Group)) {
             return;
         }
 
@@ -206,7 +208,8 @@ public class UMLObject {
     public boolean checkRenameValid() {
         ArrayList<Base> selectedObjects = getSelectedObject();
         return selectedObjects.size() == 1
-                && selectedObjects.get(0).getType() == BUTTON_TYPE.SHAPE;
+                && selectedObjects.get(0) instanceof Shape;
+//                && selectedObjects.get(0).getType() == BUTTON_TYPE.SHAPE;
     }
 
     private ArrayList<Base> getSelectedObject() {
@@ -231,7 +234,8 @@ public class UMLObject {
     private Point getBottomCorner(ArrayList<Base> selectedObjects) {
         Point bottomCorner = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
         for (Base object : selectedObjects) {
-            if (object.getType() != OBJECT_TYPE.GROUP) {
+//            if (object.getType() != OBJECT_TYPE.GROUP) {
+            if (!(object instanceof Group)) {
                 bottomCorner.x = Math.max(bottomCorner.x, object.getLocation().x + object.getSize().x);
                 bottomCorner.y = Math.max(bottomCorner.y, object.getLocation().y + object.getSize().y);
             }

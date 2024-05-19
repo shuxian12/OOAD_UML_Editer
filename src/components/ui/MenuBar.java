@@ -13,7 +13,7 @@ import java.util.Map;
 // using oop to create a menu bar
 
 public class MenuBar extends JMenuBar{
-    private Console console;
+    private final Console console;
 
     public MenuBar(Console console){
         this.console = console;
@@ -38,10 +38,8 @@ public class MenuBar extends JMenuBar{
     }
 
     private class MenuItem extends JMenuItem{
-        private final int menuItemId;
         public MenuItem(String name, int menuItemId){
             super(name);
-            this.menuItemId = menuItemId;
             this.addActionListener(e -> {
                 onPressed(menuItemId);
             });
