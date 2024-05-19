@@ -10,12 +10,9 @@ public class ButtonObject {
     private ArrayList<BaseObject> buttons = new ArrayList<BaseObject>();
 
     public ButtonObject() {
-        buttons.add(new ButtonElement(BUTTON_MODE.SELECT, BUTTON_TYPE.SELECT));
-        buttons.add(new ButtonElement(BUTTON_MODE.ASSOCIATION, BUTTON_TYPE.LINE));
-        buttons.add(new ButtonElement(BUTTON_MODE.GENERALIZATION, BUTTON_TYPE.LINE));
-        buttons.add(new ButtonElement(BUTTON_MODE.COMPOSITION, BUTTON_TYPE.LINE));
-        buttons.add(new ButtonElement(BUTTON_MODE.CCLASS, BUTTON_TYPE.SHAPE));
-        buttons.add(new ButtonElement(BUTTON_MODE.USECASE, BUTTON_TYPE.SHAPE));
+        for(BUTTON_MODE mode : BUTTON_MODE.values()) {
+            buttons.add(new ButtonElement(mode.ordinal(), BUTTON_TYPE.SHAPE));
+        }
     }
 
     public void selectButton(int buttonId) {

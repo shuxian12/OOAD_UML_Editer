@@ -1,7 +1,6 @@
 package components.ui;
 
 import components.module.Console;
-import components.module.controller.ToolBarController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,18 +10,6 @@ import static utils.Config.*;
 // using oop to create a toolbar on the left side of the main frame
 
 public class ToolBar extends JPanel {
-    private final static String[] TOOL_LIST = {
-            "select", "association", "generalization",
-            "composition", "class", "use_case"
-    };
-    private final static int[] TOOL_NUM_LIST = {
-            BUTTON_MODE.SELECT,
-            BUTTON_MODE.ASSOCIATION,
-            BUTTON_MODE.GENERALIZATION,
-            BUTTON_MODE.COMPOSITION,
-            BUTTON_MODE.CCLASS,
-            BUTTON_MODE.USECASE
-    };
     private final static String TOOL_PATH = "./img/";
 
     private final static int WIDTH = 90;
@@ -35,8 +22,8 @@ public class ToolBar extends JPanel {
         this.console = console;
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.white);
-        for (String tool : TOOL_LIST) {
-            this.add(new ToolButton(tool));
+        for (BUTTON_MODE tool : BUTTON_MODE.values()) {
+            this.add(new ToolButton(tool.toString().toLowerCase()));
         }
     }
 
@@ -45,18 +32,12 @@ public class ToolBar extends JPanel {
     }
 
     private int getBtnId(String tool) {
-        for (int i = 0; i < TOOL_LIST.length; i++) {
-            if (TOOL_LIST[i].equals(tool)) {
-                return TOOL_NUM_LIST[i];
-            }
-        }
-        return -1;
+        return BUTTON_MODE.valueOf(tool.toUpperCase()).ordinal();
     }
 
     private class ToolButton extends JButton {
         public final String btn_id;
         public final int id;
-//        public boolean is_selected = false;
 
         public ToolButton(String name) {
             super();
@@ -66,7 +47,7 @@ public class ToolBar extends JPanel {
             this.addActionListener(e ->
                     onPressed(this)
             );
-            // this.setBackground(null);
+
             this.setOpaque(true);
         }
 

@@ -14,6 +14,9 @@ import java.util.ArrayList;
 public class CanvasController {
     private UMLObject umlObject = new UMLObject();
     private Mode mode = new SelectMode(this);
+    private Mode lineMode = new LineMode(this);
+    private Mode selectMode = new SelectMode(this);
+    private Mode objectMode = new ObjectMode(this);
     private boolean isRename = false;
 
     public CanvasController() {
@@ -21,15 +24,16 @@ public class CanvasController {
     }
 
     public void setCanvasMode(int mode) {
-        if (mode == BUTTON_MODE.SELECT){
-            this.mode = new SelectMode(this);
-        } else if (mode == BUTTON_MODE.ASSOCIATION ||
-                   mode == BUTTON_MODE.COMPOSITION ||
-                   mode == BUTTON_MODE.GENERALIZATION) {
-            this.mode = new LineMode(this);
-        } else if (mode == BUTTON_MODE.CCLASS ||
-                   mode == BUTTON_MODE.USECASE) {
-            this.mode = new ObjectMode(this);
+        BUTTON_MODE buttonMode = BUTTON_MODE.getMode(mode);
+        if (buttonMode == BUTTON_MODE.SELECT){
+            this.mode = this.selectMode;
+        } else if (buttonMode == BUTTON_MODE.ASSOCIATION ||
+                   buttonMode == BUTTON_MODE.COMPOSITION ||
+                   buttonMode == BUTTON_MODE.GENERALIZATION) {
+            this.mode = this.lineMode;
+        } else if (buttonMode == BUTTON_MODE.CCLASS ||
+                   buttonMode == BUTTON_MODE.USECASE) {
+            this.mode = this.objectMode;
         }
         this.mode.setMode(mode);
     }

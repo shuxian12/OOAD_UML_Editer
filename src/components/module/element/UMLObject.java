@@ -61,12 +61,12 @@ public class UMLObject {
     }
 
     private Base getTypeObject(int mode, Point point) {
-        switch (mode) {
-            case BUTTON_MODE.CCLASS:
+        switch (BUTTON_MODE.getMode(mode)) {
+            case CCLASS:
                 return new ClassObject(point);
-            case BUTTON_MODE.USECASE:
+            case USECASE:
                 return new UseCaseObject(point);
-            case BUTTON_MODE.SELECT:
+            case SELECT:
                 return new SelectSquare(point);
             default:
                 return null;
@@ -74,12 +74,12 @@ public class UMLObject {
     }
 
     public Line getTypeLine(int mode) {
-        switch (mode) {
-            case BUTTON_MODE.ASSOCIATION:
+        switch (BUTTON_MODE.getMode(mode)) {
+            case ASSOCIATION:
                 return new AssociationLine();
-            case BUTTON_MODE.GENERALIZATION:
+            case GENERALIZATION:
                 return new GeneralizationLine();
-            case BUTTON_MODE.COMPOSITION:
+            case COMPOSITION:
                 return new CompositionLine();
             default:
                 return null;
@@ -276,14 +276,14 @@ public class UMLObject {
 
             if (normPoint.x + normPoint.y > 0) {
                 if (normPoint.x - normPoint.y > 0) {
-                    return ports.get(PORT_DIRECTION.EAST);
+                    return ports.get(PORT_DIRECTION.EAST.ordinal());
                 }
-                return ports.get(PORT_DIRECTION.SOUTH);
+                return ports.get(PORT_DIRECTION.SOUTH.ordinal());
             } else {
                 if (normPoint.x - normPoint.y > 0) {
-                    return ports.get(PORT_DIRECTION.NORTH);
+                    return ports.get(PORT_DIRECTION.NORTH.ordinal());
                 }
-                return ports.get(PORT_DIRECTION.WEST);
+                return ports.get(PORT_DIRECTION.WEST.ordinal());
             }
         }
         @Override
@@ -309,7 +309,7 @@ public class UMLObject {
 
     public class ClassObject extends Shape{
         public ClassObject(Point location){
-            super(BUTTON_MODE.CCLASS, BUTTON_TYPE.SHAPE);
+            super(BUTTON_MODE.CCLASS.ordinal(), BUTTON_TYPE.SHAPE);
             super.setName("Class");
             super.setLocation(location);
             this.height = 100;
@@ -341,7 +341,7 @@ public class UMLObject {
     public class UseCaseObject extends Shape{
         // UseCaseObject is an oval shape
         public UseCaseObject(Point location){
-            super(BUTTON_MODE.USECASE, BUTTON_TYPE.SHAPE);
+            super(BUTTON_MODE.USECASE.ordinal(), BUTTON_TYPE.SHAPE);
             super.setName("Use Case");
             super.setLocation(location);
             this.height = 40;
@@ -372,11 +372,11 @@ public class UMLObject {
         // Port is a small square shape that will be place in the use_cases or class to connect the lines,
         // and it will be visible when selected, and invisible when unselected.
         private final Base parent;
-        private final int direction;
+        private final PORT_DIRECTION direction;
         private final int PORT_SIZE = 10;
-        private final Map<Integer, Point> locationMap = new HashMap<>();
+        private final Map<PORT_DIRECTION, Point> locationMap = new HashMap<>();
 
-        public Port(Base parent, int direction){
+        public Port(Base parent, PORT_DIRECTION direction){
             super(OBJECT_TYPE.PORT, OBJECT_TYPE.PORT);
             super.setName("Port");
             this.height = PORT_SIZE;
@@ -476,7 +476,7 @@ public class UMLObject {
     public class AssociationLine extends Line{
         // arrow
         public AssociationLine(){
-            super(BUTTON_MODE.ASSOCIATION, BUTTON_TYPE.LINE);
+            super(BUTTON_MODE.ASSOCIATION.ordinal(), BUTTON_TYPE.LINE);
         }
 
         @Override
@@ -491,7 +491,7 @@ public class UMLObject {
     public class GeneralizationLine extends Line{
         // triangle <|-
         public GeneralizationLine(){
-            super(BUTTON_MODE.GENERALIZATION, BUTTON_TYPE.LINE);
+            super(BUTTON_MODE.GENERALIZATION.ordinal(), BUTTON_TYPE.LINE);
         }
 
         @Override
@@ -510,7 +510,7 @@ public class UMLObject {
     public class CompositionLine extends Line{
         // diamond line <>-
         public CompositionLine(){
-            super(BUTTON_MODE.COMPOSITION, BUTTON_TYPE.LINE);
+            super(BUTTON_MODE.COMPOSITION.ordinal(), BUTTON_TYPE.LINE);
 //            super.setConnection(start, end);
         }
 
