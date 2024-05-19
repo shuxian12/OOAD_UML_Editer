@@ -7,6 +7,7 @@ import components.module.mode.ObjectMode;
 import components.module.mode.SelectMode;
 import utils.Config.*;
 import utils.IDraw;
+import utils.config.ButtonMode;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,15 +25,15 @@ public class CanvasController {
     }
 
     public void setCanvasMode(int mode) {
-        BUTTON_MODE buttonMode = BUTTON_MODE.getMode(mode);
-        if (buttonMode == BUTTON_MODE.SELECT){
+        ButtonMode buttonMode = ButtonMode.getMode(mode);
+        if (buttonMode == ButtonMode.SELECT){
             this.mode = this.selectMode;
-        } else if (buttonMode == BUTTON_MODE.ASSOCIATION ||
-                   buttonMode == BUTTON_MODE.COMPOSITION ||
-                   buttonMode == BUTTON_MODE.GENERALIZATION) {
+        } else if (buttonMode == ButtonMode.ASSOCIATION ||
+                   buttonMode == ButtonMode.COMPOSITION ||
+                   buttonMode == ButtonMode.GENERALIZATION) {
             this.mode = this.lineMode;
-        } else if (buttonMode == BUTTON_MODE.CCLASS ||
-                   buttonMode == BUTTON_MODE.USECASE) {
+        } else if (buttonMode == ButtonMode.CCLASS ||
+                   buttonMode == ButtonMode.USECASE) {
             this.mode = this.objectMode;
         }
         this.mode.setMode(mode);

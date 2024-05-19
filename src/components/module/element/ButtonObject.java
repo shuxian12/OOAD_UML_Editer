@@ -1,6 +1,6 @@
 package components.module.element;
 
-import components.module.mode.Mode;
+import utils.config.ButtonMode;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ public class ButtonObject {
     private ArrayList<BaseObject> buttons = new ArrayList<BaseObject>();
 
     public ButtonObject() {
-        for(BUTTON_MODE mode : BUTTON_MODE.values()) {
+        for(ButtonMode mode : ButtonMode.values()) {
             buttons.add(new ButtonElement(mode.ordinal(), BUTTON_TYPE.SHAPE));
         }
     }

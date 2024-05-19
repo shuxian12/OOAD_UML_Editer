@@ -1,10 +1,11 @@
 package components.module.element;
 
 import utils.IDraw;
+import utils.config.ButtonMode;
+import utils.config.PortDirection;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 import static utils.Config.*;
 
@@ -61,7 +62,7 @@ public class UMLObject {
     }
 
     private Base getTypeObject(int mode, Point point) {
-        switch (BUTTON_MODE.getMode(mode)) {
+        switch (ButtonMode.getMode(mode)) {
             case CCLASS:
                 return new ClassObject(point);
             case USECASE:
@@ -74,7 +75,7 @@ public class UMLObject {
     }
 
     public Line getTypeLine(int mode) {
-        switch (BUTTON_MODE.getMode(mode)) {
+        switch (ButtonMode.getMode(mode)) {
             case ASSOCIATION:
                 return new AssociationLine();
             case GENERALIZATION:
@@ -264,10 +265,10 @@ public class UMLObject {
             this.name = name;
         }
         protected void addPort(){
-            ports.add(new Port(this, PORT_DIRECTION.NORTH));
-            ports.add(new Port(this, PORT_DIRECTION.EAST));
-            ports.add(new Port(this, PORT_DIRECTION.SOUTH));
-            ports.add(new Port(this, PORT_DIRECTION.WEST));
+            ports.add(new Port(this, PortDirection.NORTH));
+            ports.add(new Port(this, PortDirection.EAST));
+            ports.add(new Port(this, PortDirection.SOUTH));
+            ports.add(new Port(this, PortDirection.WEST));
         }
         public Base findPort(Point point){
             int centerX = location.x + width / 2;
@@ -276,14 +277,14 @@ public class UMLObject {
 
             if (normPoint.x + normPoint.y > 0) {
                 if (normPoint.x - normPoint.y > 0) {
-                    return ports.get(PORT_DIRECTION.EAST.ordinal());
+                    return ports.get(PortDirection.EAST.ordinal());
                 }
-                return ports.get(PORT_DIRECTION.SOUTH.ordinal());
+                return ports.get(PortDirection.SOUTH.ordinal());
             } else {
                 if (normPoint.x - normPoint.y > 0) {
-                    return ports.get(PORT_DIRECTION.NORTH.ordinal());
+                    return ports.get(PortDirection.NORTH.ordinal());
                 }
-                return ports.get(PORT_DIRECTION.WEST.ordinal());
+                return ports.get(PortDirection.WEST.ordinal());
             }
         }
         @Override
@@ -309,7 +310,7 @@ public class UMLObject {
 
     public class ClassObject extends Shape{
         public ClassObject(Point location){
-            super(BUTTON_MODE.CCLASS.ordinal(), BUTTON_TYPE.SHAPE);
+            super(ButtonMode.CCLASS.ordinal(), BUTTON_TYPE.SHAPE);
             super.setName("Class");
             super.setLocation(location);
             this.height = 100;
@@ -341,7 +342,7 @@ public class UMLObject {
     public class UseCaseObject extends Shape{
         // UseCaseObject is an oval shape
         public UseCaseObject(Point location){
-            super(BUTTON_MODE.USECASE.ordinal(), BUTTON_TYPE.SHAPE);
+            super(ButtonMode.USECASE.ordinal(), BUTTON_TYPE.SHAPE);
             super.setName("Use Case");
             super.setLocation(location);
             this.height = 40;
@@ -372,11 +373,11 @@ public class UMLObject {
         // Port is a small square shape that will be place in the use_cases or class to connect the lines,
         // and it will be visible when selected, and invisible when unselected.
         private final Base parent;
-        private final PORT_DIRECTION direction;
+        private final PortDirection direction;
         private final int PORT_SIZE = 10;
-        private final Map<PORT_DIRECTION, Point> locationMap = new HashMap<>();
+        private final Map<PortDirection, Point> locationMap = new HashMap<>();
 
-        public Port(Base parent, PORT_DIRECTION direction){
+        public Port(Base parent, PortDirection direction){
             super(OBJECT_TYPE.PORT, OBJECT_TYPE.PORT);
             super.setName("Port");
             this.height = PORT_SIZE;
@@ -386,26 +387,26 @@ public class UMLObject {
 
             this.updateMap();
 //            System.out.println("Parent size: " + parentSize + " Parent location: " + parent.getLocation());
-//            locationMap.put(PORT_DIRECTION.NORTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
+//            locationMap.put(PortDirection.NORTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
 //                                                            parent.getLocation().y - height));
-//            locationMap.put(PORT_DIRECTION.EAST, new Point(parent.getLocation().x + parentSize.x,
+//            locationMap.put(PortDirection.EAST, new Point(parent.getLocation().x + parentSize.x,
 //                                                            parent.getLocation().y + parentSize.y/2 - height/2));
-//            locationMap.put(PORT_DIRECTION.SOUTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
+//            locationMap.put(PortDirection.SOUTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
 //                                                            parent.getLocation().y + parentSize.y));
-//            locationMap.put(PORT_DIRECTION.WEST, new Point(parent.getLocation().x - width,
+//            locationMap.put(PortDirection.WEST, new Point(parent.getLocation().x - width,
 //                                                            parent.getLocation().y + parentSize.y/2 - height/2));
             this.updateLocation();
         }
 
         private void updateMap() {
             Point parentSize = parent.getSize();
-            locationMap.put(PORT_DIRECTION.NORTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
+            locationMap.put(PortDirection.NORTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
                                                             parent.getLocation().y - height));
-            locationMap.put(PORT_DIRECTION.EAST, new Point(parent.getLocation().x + parentSize.x,
+            locationMap.put(PortDirection.EAST, new Point(parent.getLocation().x + parentSize.x,
                                                             parent.getLocation().y + parentSize.y/2 - height/2));
-            locationMap.put(PORT_DIRECTION.SOUTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
+            locationMap.put(PortDirection.SOUTH, new Point(parent.getLocation().x + parentSize.x/2 - width/2,
                                                             parent.getLocation().y + parentSize.y));
-            locationMap.put(PORT_DIRECTION.WEST, new Point(parent.getLocation().x - width,
+            locationMap.put(PortDirection.WEST, new Point(parent.getLocation().x - width,
                                                             parent.getLocation().y + parentSize.y/2 - height/2));
         }
 
@@ -418,9 +419,9 @@ public class UMLObject {
 
         @Override
         public Point getLocation() {
-            if (direction == PORT_DIRECTION.NORTH) {
+            if (direction == PortDirection.NORTH) {
                 return new Point(location.x + width / 2, location.y + height);
-            } else if (direction == PORT_DIRECTION.WEST) {
+            } else if (direction == PortDirection.WEST) {
                 return new Point(location.x + width, location.y + height / 2);
             }
             return super.getLocation();
@@ -476,7 +477,7 @@ public class UMLObject {
     public class AssociationLine extends Line{
         // arrow
         public AssociationLine(){
-            super(BUTTON_MODE.ASSOCIATION.ordinal(), BUTTON_TYPE.LINE);
+            super(ButtonMode.ASSOCIATION.ordinal(), BUTTON_TYPE.LINE);
         }
 
         @Override
@@ -491,7 +492,7 @@ public class UMLObject {
     public class GeneralizationLine extends Line{
         // triangle <|-
         public GeneralizationLine(){
-            super(BUTTON_MODE.GENERALIZATION.ordinal(), BUTTON_TYPE.LINE);
+            super(ButtonMode.GENERALIZATION.ordinal(), BUTTON_TYPE.LINE);
         }
 
         @Override
@@ -510,7 +511,7 @@ public class UMLObject {
     public class CompositionLine extends Line{
         // diamond line <>-
         public CompositionLine(){
-            super(BUTTON_MODE.COMPOSITION.ordinal(), BUTTON_TYPE.LINE);
+            super(ButtonMode.COMPOSITION.ordinal(), BUTTON_TYPE.LINE);
 //            super.setConnection(start, end);
         }
 

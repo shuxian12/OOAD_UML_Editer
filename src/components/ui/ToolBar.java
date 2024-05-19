@@ -1,11 +1,10 @@
 package components.ui;
 
 import components.module.Console;
+import utils.config.ButtonMode;
 
 import javax.swing.*;
 import java.awt.*;
-
-import static utils.Config.*;
 
 // using oop to create a toolbar on the left side of the main frame
 
@@ -22,7 +21,7 @@ public class ToolBar extends JPanel {
         this.console = console;
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.white);
-        for (BUTTON_MODE tool : BUTTON_MODE.values()) {
+        for (ButtonMode tool : ButtonMode.values()) {
             this.add(new ToolButton(tool.toString().toLowerCase()));
         }
     }
@@ -32,7 +31,7 @@ public class ToolBar extends JPanel {
     }
 
     private int getBtnId(String tool) {
-        return BUTTON_MODE.valueOf(tool.toUpperCase()).ordinal();
+        return ButtonMode.valueOf(tool.toUpperCase()).ordinal();
     }
 
     private class ToolButton extends JButton {
