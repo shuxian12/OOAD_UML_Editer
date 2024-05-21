@@ -8,12 +8,9 @@ public abstract class Mode {
     private int mode = 0;
     protected CanvasController canvasController;
 
-    public Mode(CanvasController canvasController) {
+    public Mode(CanvasController canvasController, int mode) {
         System.out.println("Mode initialized");
         this.canvasController = canvasController;
-    }
-
-    public void setMode(int mode) {
         this.mode = mode;
     }
 

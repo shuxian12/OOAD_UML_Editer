@@ -4,7 +4,7 @@ import components.module.element.line.*;
 import components.module.element.shape.*;
 import components.module.element.shape.Shape;
 import utils.IDraw;
-import utils.config.ButtonMode;
+import utils.config.ObjectType;
 
 import java.awt.*;
 import java.util.*;
@@ -62,29 +62,31 @@ public class UMLObject {
     }
 
     private BaseObject getTypeObject(int mode, Point point) {
-        switch (ButtonMode.getMode(mode)) {
-            case CCLASS:
-                return new ClassObject(point);
-            case USECASE:
-                return new UseCaseObject(point);
-            case SELECT:
-                return new SelectSquare(point);
-            default:
-                return null;
-        }
+//        switch (ButtonMode.getMode(mode)) {
+//            case CCLASS:
+//                return new ClassObject(point);
+//            case USECASE:
+//                return new UseCaseObject(point);
+//            case SELECT:
+//                return new SelectSquare(point);
+//            default:
+//                return null;
+//        }
+        return ObjectType.getType(mode).getConstructor(point);
     }
 
     public Line getTypeLine(int mode) {
-        switch (ButtonMode.getMode(mode)) {
-            case ASSOCIATION:
-                return new AssociationLine();
-            case GENERALIZATION:
-                return new GeneralizationLine();
-            case COMPOSITION:
-                return new CompositionLine();
-            default:
-                return null;
-        }
+//        switch (ButtonMode.getMode(mode)) {
+//            case ASSOCIATION:
+//                return new AssociationLine();
+//            case GENERALIZATION:
+//                return new GeneralizationLine();
+//            case COMPOSITION:
+//                return new CompositionLine();
+//            default:
+//                return null;
+//        }
+        return (Line) ObjectType.getType(mode).getConstructor(null);
     }
 
     public void unselectALL() {
@@ -171,7 +173,6 @@ public class UMLObject {
         System.out.println("Ungrouping");
         ArrayList<BaseObject> selectedObjects = getSelectedObject();
         if (selectedObjects.size() != 1 ||
-//                selectedObjects.get(0).getType() != OBJECT_TYPE.GROUP) {
                 !(selectedObjects.get(0) instanceof Group)) {
             return;
         }
@@ -193,7 +194,6 @@ public class UMLObject {
         ArrayList<BaseObject> selectedObjects = getSelectedObject();
         return selectedObjects.size() == 1
                 && selectedObjects.get(0) instanceof Shape;
-//                && selectedObjects.get(0).getType() == BUTTON_TYPE.SHAPE;
     }
 
     private ArrayList<BaseObject> getSelectedObject() {
@@ -218,7 +218,6 @@ public class UMLObject {
     private Point getBottomCorner(ArrayList<BaseObject> selectedObjects) {
         Point bottomCorner = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
         for (BaseObject object : selectedObjects) {
-//            if (object.getType() != OBJECT_TYPE.GROUP) {
             if (!(object instanceof Group)) {
                 bottomCorner.x = Math.max(bottomCorner.x, object.getLocation().x + object.getSize().x);
                 bottomCorner.y = Math.max(bottomCorner.y, object.getLocation().y + object.getSize().y);

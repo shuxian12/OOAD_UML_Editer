@@ -5,8 +5,8 @@ import static utils.Config.*;
 import java.awt.*;
 
 public class ObjectMode extends Mode{
-    public ObjectMode(CanvasController canvasController) {
-        super(canvasController);
+    public ObjectMode(CanvasController canvasController, int mode) {
+        super(canvasController, mode);
         System.out.println("ObjectMode initialized");
     }
 

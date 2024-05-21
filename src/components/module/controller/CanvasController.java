@@ -17,10 +17,8 @@ import java.util.ArrayList;
 
 public class CanvasController {
     private UMLObject umlObject = new UMLObject();
-    private Mode mode = new SelectMode(this);
-    private Mode lineMode = new LineMode(this);
-    private Mode selectMode = new SelectMode(this);
-    private Mode objectMode = new ObjectMode(this);
+    private Mode mode = new SelectMode(this, ButtonMode.SELECT.ordinal());
+
     private boolean isRename = false;
 
     public CanvasController() {
@@ -29,17 +27,7 @@ public class CanvasController {
 
     public void setCanvasMode(int mode) {
         ButtonMode buttonMode = ButtonMode.getMode(mode);
-        if (buttonMode == ButtonMode.SELECT){
-            this.mode = this.selectMode;
-        } else if (buttonMode == ButtonMode.ASSOCIATION ||
-                   buttonMode == ButtonMode.COMPOSITION ||
-                   buttonMode == ButtonMode.GENERALIZATION) {
-            this.mode = this.lineMode;
-        } else if (buttonMode == ButtonMode.CCLASS ||
-                   buttonMode == ButtonMode.USECASE) {
-            this.mode = this.objectMode;
-        }
-        this.mode.setMode(mode);
+        this.mode = buttonMode.getCanvasMode(this, mode);
     }
 
     public boolean doRenameValid() {
@@ -65,7 +53,7 @@ public class CanvasController {
     }
 
     public void onDragged(Point point) {
-        System.out.println("Canvas Dragged");
+//        System.out.println("Canvas Dragged");
         this.mode.onDragged(point);
     }
 

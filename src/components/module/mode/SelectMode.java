@@ -8,8 +8,8 @@ import java.awt.*;
 
 public class SelectMode extends Mode{
     private MouseBehavior mouseBehavior;
-    public SelectMode(CanvasController canvasController) {
-        super(canvasController);
+    public SelectMode(CanvasController canvasController, int mode) {
+        super(canvasController, mode);
         System.out.println("SelectMode initialized");
     }
 

@@ -11,8 +11,8 @@ public class LineMode extends Mode{
     private Port startPort;
     private Port endPort;
     private boolean validPress = false;
-    public LineMode(CanvasController canvasController) {
-        super(canvasController);
+    public LineMode(CanvasController canvasController, int mode) {
+        super(canvasController, mode);
         System.out.println("LineMode initialized");
     }
 
