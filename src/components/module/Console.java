@@ -3,7 +3,6 @@ package components.module;
 import components.module.controller.CanvasController;
 import components.module.controller.MenuController;
 import components.module.controller.ToolBarController;
-import components.module.element.UMLObject;
 import utils.IDraw;
 import utils.IObserver;
 
@@ -55,7 +54,7 @@ public class Console {
 
     public void MenuPressed(int actionId) {
 //        menuController.onMenuPressed(actionId);
-        canvasController.doAction(actionId, null);
+        canvasController.doAction(actionId);
 
         if (canvasController.doRenameValid()) {
             changeObjectName(JOptionPane.showInputDialog(

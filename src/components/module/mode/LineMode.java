@@ -1,14 +1,15 @@
 package components.module.mode;
 
 import components.module.controller.CanvasController;
-import components.module.element.UMLObject;
+import components.module.element.line.Line;
+import components.module.element.shape.Port;
 
 import java.awt.*;
 
 public class LineMode extends Mode{
-    private UMLObject.Line line;
-    private UMLObject.Port startPort;
-    private UMLObject.Port endPort;
+    private Line line;
+    private Port startPort;
+    private Port endPort;
     private boolean validPress = false;
     public LineMode(CanvasController canvasController) {
         super(canvasController);

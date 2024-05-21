@@ -1,6 +1,7 @@
 package components.module.mode;
 
 import components.module.controller.CanvasController;
+import components.module.element.BaseObject;
 import components.module.element.UMLObject;
 
 import java.awt.*;
@@ -16,7 +17,7 @@ public class SelectMode extends Mode{
     public void onPressed(Point point) {
         System.out.println("SelectMode onPressed");
         canvasController.unselectALL();
-        UMLObject.Base object = this.canvasController.findObject(point);
+        BaseObject object = this.canvasController.findObject(point);
         if (object != null) {
             this.mouseBehavior = new SelectObject(object);
         } else {
@@ -36,8 +37,8 @@ public class SelectMode extends Mode{
     }
 
     abstract private class MouseBehavior {
-        protected UMLObject.Base target;
-        public MouseBehavior(UMLObject.Base target) {
+        protected BaseObject target;
+        public MouseBehavior(BaseObject target) {
             this.target = target;
         }
         abstract public void onPressed(Point pt);
@@ -48,7 +49,7 @@ public class SelectMode extends Mode{
     private class NullSelectBehavior extends MouseBehavior {
         private Point initialPoint;
         // 選取模式
-        public NullSelectBehavior(UMLObject.Base target) {
+        public NullSelectBehavior(BaseObject target) {
             super(target);
         }
         @Override
@@ -78,7 +79,7 @@ public class SelectMode extends Mode{
 
     private class SelectObject extends MouseBehavior {
         private Point prevPt;
-        public SelectObject(UMLObject.Base target) {
+        public SelectObject(BaseObject target) {
             super(target);
         }
         @Override

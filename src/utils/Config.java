@@ -6,18 +6,6 @@ import java.awt.*;
 import java.util.Map;
 
 public class Config {
-    public static class BUTTON_TYPE {
-        public static final int SELECT = 0;
-        public static final int LINE = 1;
-        public static final int SHAPE = 2;
-    }
-
-    public static class OBJECT_TYPE {
-        public static final int PORT = 6;
-        public static final int GROUP = 7;
-        public static final int SELECT_SQUARE = 8;
-    }
-
     public static class MENU_CONFIG {
         public static final String[] MENU_LIST = {"File", "Edit"};
 

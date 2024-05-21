@@ -32,7 +32,7 @@ public class Canvas extends JPanel {
 
     private class MouseListener extends MouseInputAdapter {
         public void mousePressed(MouseEvent e) {
-            System.out.println("Canvas Pressed");
+//            System.out.println("Canvas Pressed");
             console.CanvasPressed(e.getPoint());
         }
 
@@ -42,7 +42,7 @@ public class Canvas extends JPanel {
         }
 
         public void mouseReleased(MouseEvent e) {
-            System.out.println("Canvas Released");
+//            System.out.println("Canvas Released");
             console.CanvasReleased(e.getPoint());
         }
     }

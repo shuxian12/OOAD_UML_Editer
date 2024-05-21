@@ -1,6 +1,9 @@
 package components.module.controller;
 
+import components.module.element.BaseObject;
 import components.module.element.UMLObject;
+import components.module.element.line.Line;
+import components.module.element.shape.Port;
 import components.module.mode.LineMode;
 import components.module.mode.Mode;
 import components.module.mode.ObjectMode;
@@ -62,7 +65,7 @@ public class CanvasController {
     }
 
     public void onDragged(Point point) {
-//        System.out.println("Canvas Dragged");
+        System.out.println("Canvas Dragged");
         this.mode.onDragged(point);
     }
 
@@ -71,13 +74,13 @@ public class CanvasController {
         this.mode.onReleased(point);
     }
 
-    public UMLObject.Base findObject(Point point) {
+    public BaseObject findObject(Point point) {
         System.out.println("Finding object");
         umlObject.unselectALL();
         return umlObject.findObject(point);
     }
 
-    public UMLObject.Port findPort(Point point) {
+    public Port findPort(Point point) {
         System.out.println("Finding port");
         return umlObject.findPort(point);
     }
@@ -87,17 +90,17 @@ public class CanvasController {
         umlObject.setAreaObjects(topCorner, bottomCorner);
     }
 
-    public UMLObject.Base createObject(Point point) {
+    public BaseObject createObject(Point point) {
         System.out.println("Creating object");
         return umlObject.addObject(this.getCanvasMode(), point);
     }
 
-    public UMLObject.Line createLine() {
+    public Line createLine() {
         System.out.println("Creating line");
         return umlObject.addLine(this.getCanvasMode());
     }
 
-    public void removeObject(UMLObject.Base object) {
+    public void removeObject(BaseObject object) {
         System.out.println("Removing object");
         umlObject.removeObject(object);
     }
@@ -110,7 +113,7 @@ public class CanvasController {
         umlObject.unselectALL();
     }
 
-    public void doAction(int action, UMLObject.Base object) {
+    public void doAction(int action) {
         System.out.println("Doing action");
 //        umlObject.doAction(action, object);
         switch (action) {

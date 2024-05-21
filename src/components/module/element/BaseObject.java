@@ -4,21 +4,21 @@ import utils.IDraw;
 
 import java.awt.*;
 
-abstract class BaseObject{
+public abstract class BaseObject{
     protected Point location = new Point();
     protected int width;
     protected int height;
     protected int id;
-    protected int type;
+//    protected int type;
     protected int depth;
     protected boolean selected = false;
     protected boolean isGroup = false;
 
     public BaseObject(){} // Default constructor
 
-    public BaseObject(int id, int type){
+    public BaseObject(int id){
         this.id = id;
-        this.type = type;
+//        this.type = type;
     }
 
     abstract public void draw(Graphics g);
@@ -26,7 +26,6 @@ abstract class BaseObject{
     public int getId() { return id; }
     public Point getSize() { return new Point(width, height); }
     public Point getLocation() { return location; }
-    public int getType() { return type; }
     public IDraw getDrawMethod() {
         return (Graphics2D g) -> draw(g);
     }
@@ -41,6 +40,10 @@ abstract class BaseObject{
     public void setLocation(Point pt) { location = pt; }
 
     public void updateLocation(){}
+
+    public void setGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
 
     public void setSize(int width, int height) {
         this.width = width;

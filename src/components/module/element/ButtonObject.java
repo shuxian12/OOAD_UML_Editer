@@ -4,14 +4,13 @@ import utils.config.ButtonMode;
 
 import java.awt.*;
 import java.util.ArrayList;
-import static utils.Config.*;
 
 public class ButtonObject {
     private ArrayList<BaseObject> buttons = new ArrayList<BaseObject>();
 
     public ButtonObject() {
         for(ButtonMode mode : ButtonMode.values()) {
-            buttons.add(new ButtonElement(mode.ordinal(), BUTTON_TYPE.SHAPE));
+            buttons.add(new ButtonElement(mode.ordinal()));
         }
     }
 
@@ -39,13 +38,11 @@ public class ButtonObject {
     }
 
     private class ButtonElement extends BaseObject {
-        public ButtonElement(int id, int type) {
-            super(id, type);
+        public ButtonElement(int id) {
+            super(id);
         }
 
         @Override
         public void draw(Graphics g) {}
     }
-
-
 }
