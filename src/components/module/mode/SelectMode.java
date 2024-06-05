@@ -2,7 +2,6 @@ package components.module.mode;
 
 import components.module.controller.CanvasController;
 import components.module.element.BaseObject;
-import components.module.element.UMLObject;
 
 import java.awt.*;
 
@@ -19,7 +18,7 @@ public class SelectMode extends Mode{
         canvasController.unselectALL();
         BaseObject object = this.canvasController.findObject(point);
         if (object != null) {
-            this.mouseBehavior = new SelectObject(object);
+            this.mouseBehavior = new SelectObjectBehavior(object);
         } else {
             this.mouseBehavior = new NullSelectBehavior(null);
         }
@@ -77,9 +76,9 @@ public class SelectMode extends Mode{
         }
     }
 
-    private class SelectObject extends MouseBehavior {
+    private class SelectObjectBehavior extends MouseBehavior {
         private Point prevPt;
-        public SelectObject(BaseObject target) {
+        public SelectObjectBehavior(BaseObject target) {
             super(target);
         }
         @Override

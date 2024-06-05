@@ -3,7 +3,7 @@ package components.module.controller;
 import components.module.element.MenuObject;
 
 public class MenuController {
-    private static final MenuObject MENU_BAR = new MenuObject();
+    private static final MenuObject menuObject = new MenuObject();
 
     public MenuController() {
         System.out.println("MenuController initialized");

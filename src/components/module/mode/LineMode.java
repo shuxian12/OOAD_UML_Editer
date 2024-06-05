@@ -18,7 +18,6 @@ public class LineMode extends Mode{
 
     @Override
     public void onPressed(Point point) {
-        System.out.println("LineMode onPressed");
         this.startPort = this.canvasController.findPort(point);
         System.out.println("LineMode onPressed startPort: " + this.startPort);
         validPress = false;

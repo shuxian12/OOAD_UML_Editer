@@ -26,8 +26,6 @@ public class Canvas extends JPanel {
         console.getObjects().forEach(e -> {
             e.draw(g2d);
         });
-//        g.setColor(Color.white);
-//        g.fillRect(0, 0, this.getWidth(), this.getHeight());
     }
 
     private class MouseListener extends MouseInputAdapter {

@@ -62,30 +62,10 @@ public class UMLObject {
     }
 
     private BaseObject getTypeObject(int mode, Point point) {
-//        switch (ButtonMode.getMode(mode)) {
-//            case CCLASS:
-//                return new ClassObject(point);
-//            case USECASE:
-//                return new UseCaseObject(point);
-//            case SELECT:
-//                return new SelectSquare(point);
-//            default:
-//                return null;
-//        }
         return ObjectType.getType(mode).getConstructor(point);
     }
 
-    public Line getTypeLine(int mode) {
-//        switch (ButtonMode.getMode(mode)) {
-//            case ASSOCIATION:
-//                return new AssociationLine();
-//            case GENERALIZATION:
-//                return new GeneralizationLine();
-//            case COMPOSITION:
-//                return new CompositionLine();
-//            default:
-//                return null;
-//        }
+    private Line getTypeLine(int mode) {
         return (Line) ObjectType.getType(mode).getConstructor(null);
     }
 
@@ -111,8 +91,6 @@ public class UMLObject {
 
     public Shape findContainObject(Point point) {
         for (BaseObject object : objects) {
-//            if (object.contains(point) && !object.isGroup) {
-//            if (object.getType() != OBJECT_TYPE.GROUP && object.contains(point)) {
             if (!(object instanceof Group) && object.contains(point)) {
                 return (Shape) object;
             }
@@ -126,14 +104,12 @@ public class UMLObject {
         while (iterator.hasPrevious()) {
             BaseObject object = iterator.previous();
             draws.add(object.getDrawMethod());
-//            System.out.println("Object added to draw: " + object.getId());
         }
         return draws;
     }
 
     public Port findPort(Point point) {
         Shape object = findContainObject(point);
-//        if (object != null && object.getType() != OBJECT_TYPE.GROUP){
         if (object != null){
             System.out.println("Pressed on object");
             return (Port) object.findPort(point);
