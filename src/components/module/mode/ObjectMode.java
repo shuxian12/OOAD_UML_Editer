@@ -1,13 +1,15 @@
 package components.module.mode;
 
 import components.module.controller.CanvasController;
+import utils.config.ButtonMode;
+
 import static utils.Config.*;
 import java.awt.*;
 
 public class ObjectMode extends Mode{
     public ObjectMode(CanvasController canvasController, int mode) {
         super(canvasController, mode);
-        System.out.println("ObjectMode initialized");
+        System.out.println("ObjectMode initialized: " + ButtonMode.getMode(mode).name());
     }
 
     @Override

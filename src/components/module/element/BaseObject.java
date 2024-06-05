@@ -3,6 +3,7 @@ package components.module.element;
 import utils.IDraw;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public abstract class BaseObject{
     protected Point location = new Point();
@@ -30,6 +31,8 @@ public abstract class BaseObject{
         return (Graphics2D g) -> draw(g);
     }
     public boolean getSelected() { return selected; }
+    public Point getBottomCorner() { return new Point(location.x + width, location.y + height); }
+    public ArrayList<BaseObject> getInnerObjects() { return null; }
     public void select() { selected = true; }
     public void unselect() { selected = false; }
 
@@ -64,11 +67,23 @@ public abstract class BaseObject{
                 pt.y > location.y && pt.y < location.y + height;
     }
 
+    public boolean findContainObject(Point pt) {
+        return contains(pt);
+    }
+
     public boolean containInArea(Point start, Point end) {
         int w = end.x - start.x;
         int h = end.y - start.y;
         return location.x > start.x && location.x + width < start.x + w &&
                 location.y > start.y && location.y + height < start.y + h;
+    }
+
+    public boolean canUngroup() {
+        return false;
+    }
+
+    public boolean canRename() {
+        return false;
     }
 
 }

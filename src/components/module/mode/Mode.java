@@ -9,7 +9,7 @@ public abstract class Mode {
     protected CanvasController canvasController;
 
     public Mode(CanvasController canvasController, int mode) {
-        System.out.println("Mode initialized");
+//        System.out.println("Mode initialized");
         this.canvasController = canvasController;
         this.mode = mode;
     }

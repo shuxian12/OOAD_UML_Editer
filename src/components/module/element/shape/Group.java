@@ -38,13 +38,23 @@ public class Group extends Shape {
         return endLocation;
     }
 
-    public ArrayList<BaseObject> getGroupObjects() {
+    public ArrayList<BaseObject> getInnerObjects() {
         return groupObjects;
+    }
+
+    @Override
+    public boolean canUngroup() {
+        return true;
     }
 
     @Override
     public void draw(Graphics g) {
         super.draw(g);
+
+        for (BaseObject object : groupObjects) {
+            object.draw(g);
+        }
+
         if (getSelected() && !isGroup) {
             g.setColor(Color.black);
         }
@@ -53,10 +63,6 @@ public class Group extends Shape {
         }
         g.drawRect(startLocation.x, startLocation.y,
                 endLocation.x - startLocation.x, endLocation.y - startLocation.y);
-
-        for (BaseObject object : groupObjects) {
-            object.draw(g);
-        }
     }
 
     @Override
@@ -86,9 +92,19 @@ public class Group extends Shape {
     }
 
     @Override
+    public boolean findContainObject(Point pt) {
+        return false;
+    }
+
+    @Override
     public boolean containInArea(Point start, Point end) {
         return startLocation.x > start.x && endLocation.x < end.x &&
                 startLocation.y > start.y && endLocation.y < end.y;
+    }
+
+    @Override
+    public Point getBottomCorner() {
+        return endLocation;
     }
 }
 

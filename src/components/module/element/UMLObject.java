@@ -91,7 +91,7 @@ public class UMLObject {
 
     public Shape findContainObject(Point point) {
         for (BaseObject object : objects) {
-            if (!(object instanceof Group) && object.contains(point)) {
+            if (object.findContainObject(point)) {
                 return (Shape) object;
             }
         }
@@ -148,13 +148,12 @@ public class UMLObject {
     public void ungroup() {
         System.out.println("Ungrouping");
         ArrayList<BaseObject> selectedObjects = getSelectedObject();
-        if (selectedObjects.size() != 1 ||
-                !(selectedObjects.get(0) instanceof Group)) {
+        if (selectedObjects.size() != 1 || !selectedObjects.get(0).canUngroup()) {
             return;
         }
 
-        for (BaseObject object : ((Group) selectedObjects.get(0)).getGroupObjects()) {
-            object.isGroup = false;
+        for (BaseObject object : selectedObjects.get(0).getInnerObjects()) {
+            object.setGroup(false);
         }
         objects.remove(selectedObjects.get(0));
         this.unselectALL();
@@ -169,7 +168,7 @@ public class UMLObject {
     public boolean checkRenameValid() {
         ArrayList<BaseObject> selectedObjects = getSelectedObject();
         return selectedObjects.size() == 1
-                && selectedObjects.get(0) instanceof Shape;
+                && selectedObjects.get(0).canRename();
     }
 
     private ArrayList<BaseObject> getSelectedObject() {
@@ -194,14 +193,8 @@ public class UMLObject {
     private Point getBottomCorner(ArrayList<BaseObject> selectedObjects) {
         Point bottomCorner = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
         for (BaseObject object : selectedObjects) {
-            if (!(object instanceof Group)) {
-                bottomCorner.x = Math.max(bottomCorner.x, object.getLocation().x + object.getSize().x);
-                bottomCorner.y = Math.max(bottomCorner.y, object.getLocation().y + object.getSize().y);
-            }
-            else {
-                bottomCorner.x = Math.max(bottomCorner.x, ((Group) object).getEndLocation().x);
-                bottomCorner.y = Math.max(bottomCorner.y, ((Group) object).getEndLocation().y);
-            }
+            bottomCorner.x = Math.max(bottomCorner.x, object.getBottomCorner().x);
+            bottomCorner.y = Math.max(bottomCorner.y, object.getBottomCorner().y);
         }
         return bottomCorner;
     }

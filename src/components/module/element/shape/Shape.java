@@ -57,4 +57,9 @@ public abstract class Shape extends BaseObject {
         super.move(dx, dy);
 //            System.out.println("Shape move from " + location + " to " + new Point(location.x + dx, location.y + dy));
     }
+
+    @Override
+    public boolean canRename() {
+        return super.canRename();
+    }
 }

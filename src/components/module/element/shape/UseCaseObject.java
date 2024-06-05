@@ -34,4 +34,9 @@ public class UseCaseObject extends Shape{
         int y = pt.y - location.y - height / 2;
         return (x * x) / (width * width / 4) + (y * y) / (height * height / 4) <= 1;
     }
+
+    @Override
+    public boolean canRename() {
+        return true;
+    }
 }
