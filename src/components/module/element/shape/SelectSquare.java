@@ -7,8 +7,8 @@ import java.awt.*;
 public class SelectSquare extends Shape {
     public SelectSquare(Point location){
         super(ObjectType.SELECT_SQUARE.ordinal());
-        super.setName("Select Square");
         super.setLocation(location);
+        this.name = "Select Square";
     }
 
     @Override

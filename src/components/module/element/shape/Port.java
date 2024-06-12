@@ -19,7 +19,7 @@ public class Port extends Shape{
 
     public Port(BaseObject parent, PortDirection direction){
         super(ObjectType.PORT.ordinal());
-        super.setName("Port");
+        this.name = "Port";
         this.height = PORT_SIZE;
         this.width = PORT_SIZE;
         this.parent = parent;

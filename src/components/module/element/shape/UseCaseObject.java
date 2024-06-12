@@ -10,8 +10,8 @@ public class UseCaseObject extends Shape{
     // UseCaseObject is an oval shape
     public UseCaseObject(Point location){
         super(ObjectType.USECASE.ordinal());
-        super.setName("Use Case");
         super.setLocation(location);
+        this.name = "Use Case";
         this.height = 40;
         this.width = 100;
         this.addPort();
@@ -33,6 +33,11 @@ public class UseCaseObject extends Shape{
         int x = pt.x - location.x - width / 2;
         int y = pt.y - location.y - height / 2;
         return (x * x) / (width * width / 4) + (y * y) / (height * height / 4) <= 1;
+    }
+
+    @Override
+    public void setName(String name){
+        this.name = name;
     }
 
     @Override

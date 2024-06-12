@@ -7,8 +7,8 @@ import java.awt.*;
 public class ClassObject extends Shape{
     public ClassObject(Point location){
         super(ButtonMode.CCLASS.ordinal());
-        super.setName("Class");
         super.setLocation(location);
+        this.name = "Class";
         this.height = 100;
         this.width = 50;
         this.addPort();
@@ -32,6 +32,11 @@ public class ClassObject extends Shape{
         int x = pt.x - location.x;
         int y = pt.y - location.y;
         return x >= 0 && x <= width && y >= 0 && y <= height;
+    }
+
+    @Override
+    public void setName(String name){
+        this.name = name;
     }
 
     @Override

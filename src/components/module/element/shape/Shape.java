@@ -12,9 +12,6 @@ public abstract class Shape extends BaseObject {
     Shape(int id){
         super(id);
     }
-    public void setName(String name){
-        this.name = name;
-    }
     protected void addPort(){
         ports.add(new Port(this, PortDirection.NORTH));
         ports.add(new Port(this, PortDirection.EAST));

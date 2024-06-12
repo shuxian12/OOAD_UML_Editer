@@ -162,7 +162,7 @@ public class UMLObject {
     public void rename(String newName) {
         System.out.println("Rename");
         ArrayList<BaseObject> selectedObjects = getSelectedObject();
-        ((Shape) selectedObjects.get(0)).setName(newName);
+        selectedObjects.get(0).setName(newName);
     }
 
     public boolean checkRenameValid() {

@@ -62,6 +62,8 @@ public abstract class BaseObject{
         this.depth = depth;
     }
 
+    public void setName(String name) {}
+
     public boolean contains(Point pt) {
         return pt.x > location.x && pt.x < location.x + width &&
                 pt.y > location.y && pt.y < location.y + height;

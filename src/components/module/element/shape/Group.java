@@ -12,8 +12,8 @@ public class Group extends Shape {
     private Point endLocation;
     public Group(Point startLocation, Point endLocation, ArrayList<BaseObject> groupObjects){
         super(ObjectType.GROUP.ordinal());
-        super.setName("Group");
         this.setLocation(startLocation, endLocation);
+        this.name = "Group";
         this.groupObjects = groupObjects;
         this.setGroupType();
     }
