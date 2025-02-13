@@ -1,4 +1,4 @@
-# OOAD_UML_Editer
+# OOAD_UML_Editor
 
-* UML Diagram for this edtior.
+* UML Diagram for this editor.
 ![image](./uml_class_diagram.png)
